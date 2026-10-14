@@ -9,6 +9,34 @@ sources:
     semantics: default
     path: demo/data/facts.csv
 
+  # 1b) The SAME demo data, but served through a real MCP server (tests/fake_mcp_server.py).
+  #     Use this to see the MCP path end-to-end without SAC: the agent starts the server as a
+  #     subprocess, calls its `read_fact_data` tool over stdio, and analyses what comes back.
+  demo_mcp:
+    type: mcp
+    label: Demo retailer via a local MCP server
+    semantics: default
+    transport: stdio
+    command: python
+    args: ["tests/fake_mcp_server.py", "demo/data/facts.csv"]
+    capabilities:
+      write_draft: true
+    operations:
+      describe:
+        tool: get_model_metadata
+        arguments: { model_id: "DEMO" }
+      read_facts:
+        tool: read_fact_data
+        arguments:
+          model_id: "DEMO"
+          filters: "{filters}"
+          measures: "{measures}"
+          dimensions: "{dimensions}"
+        result_path: data
+      write_draft:
+        tool: upload_job_data
+        arguments: { model_id: "DEMO", version: "{target_version}", rows: "{rows}", comment: "VD {proposal_id}" }
+
   # 2) SAP Analytics Cloud through SAC-MCP (stdio). Adjust tool names/arguments to your server.
   sac:
     type: mcp
