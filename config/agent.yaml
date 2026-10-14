@@ -1,0 +1,49 @@
+# Variance Detective — main configuration.
+# Secrets never go here: they come from the environment (see .env.example).
+# Any key can be overridden with an env var: VD_LLM__PROVIDER=bedrock, VD_ANALYSIS__MAX_DEPTH=2 ...
+
+workspace: workspace
+semantic_model: config/semantic_model.yaml
+sources_file: config/sources.yaml
+
+llm:
+  # offline | anthropic | bedrock | azure_openai | openai
+  provider: ${VD_LLM_PROVIDER:-offline}
+  model: ${VD_LLM_MODEL:-claude-sonnet-4-5}
+  temperature: 0.1
+  max_tokens: 4000
+  timeout_seconds: 120
+  max_retries: 3
+  # --- provider specifics (only the block for your provider matters) ---
+  # bedrock:       model = "anthropic.claude-sonnet-4-5-20250929-v1:0" (or an inference-profile ARN)
+  region: ${AWS_REGION:-eu-west-2}
+  # azure_openai:  endpoint + deployment name; key from AZURE_OPENAI_API_KEY
+  azure_endpoint: ${AZURE_OPENAI_ENDPOINT:-}
+  azure_deployment: ${AZURE_OPENAI_DEPLOYMENT:-}
+  azure_api_version: "2024-10-21"
+  # openai-compatible (OpenAI, Ollama http://localhost:11434/v1, vLLM, Groq ...)
+  base_url: ${OPENAI_BASE_URL:-}
+
+analysis:
+  coverage_target: 0.80        # children must explain 80% of each node
+  max_depth: 4                 # dimension levels to drill (region → channel → category → store)
+  max_children_per_node: 5
+  materiality_abs: 0           # absolute threshold in KPI units (0 = off)
+  materiality_pct: 0           # % of comparison value (0 = off)
+  min_child_share: 0.05
+  offset_threshold: 0.10       # report favourable members ≥10% of the node variance
+
+memory:
+  enabled: true
+  path: workspace/memory.sqlite
+
+writeback:
+  mode: draft                  # disabled | draft | auto   (auto is intentionally not wired to apply without approval)
+  proposals_dir: workspace/proposals
+  target_version: Forecast
+
+reporting:
+  output_dir: workspace/reports
+  formats: [html, markdown, json]
+  currency_symbol: "£"
+  evidence_rows_limit: 25

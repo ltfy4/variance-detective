@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ r.title }}</title>
+<meta name="description" content="{{ narrative.headline }}">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --surface-2: #f1f1ee; --line: #e3e2dd; --grid: #ebebe7;
+    --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #7a7974;
+    --fav: #2a78d6; --adv: #e34948; --neu: #9a9993;
+    --good: #0ca30c; --warn: #fab219; --crit: #d03b3b;
+    --accent: #2a78d6; --chip: #e8f0fb; --chip-ink: #184f95;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --surface-2: #232322; --line: #2e2e2c; --grid: #2a2a28;
+      --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86;
+      --fav: #3987e5; --adv: #e66767; --neu: #6f6e68;
+      --chip: #1d2c40; --chip-ink: #9ec5f4;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --surface-2: #232322; --line: #2e2e2c; --grid: #2a2a28;
+    --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86;
+    --fav: #3987e5; --adv: #e66767; --neu: #6f6e68;
+    --chip: #1d2c40; --chip-ink: #9ec5f4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 64px; }
+  header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  h1 { font-size: 26px; margin: 2px 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 17px; margin: 0 0 12px; letter-spacing: -0.005em; }
+  .meta { color: var(--ink-3); font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .meta code { font-family: var(--mono); font-size: 12px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); }
+  .badge.ok { color: var(--good); } .badge.warn { color: var(--crit); }
+  section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 18px; }
+  .hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .tile { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; }
+  .tile .k { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+  .tile .n { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tile .s { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .adv { color: var(--adv); } .fav { color: var(--fav); }
+  .headline { font-size: 20px; font-weight: 650; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .summary { color: var(--ink-2); margin: 0 0 16px; }
+  ul.claims { list-style: none; padding: 0; margin: 0; }
+  ul.claims li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+  ul.claims li:first-child { border-top: 0; }
+  .tick-ok { color: var(--good); font-weight: 700; } .tick-warn { color: var(--crit); font-weight: 700; }
+  .chips { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-family: var(--mono); font-size: 11px; background: var(--chip); color: var(--chip-ink); padding: 1px 7px; border-radius: 6px; text-decoration: none; }
+  .note { font-size: 12px; color: var(--crit); margin-top: 4px; }
+  ol.actions { margin: 0; padding-left: 20px; } ol.actions li { margin: 4px 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  svg.chart { width: 100%; height: auto; display: block; font-family: var(--sans); }
+  svg.chart .tick { font-size: 11px; fill: var(--ink-3); } svg.chart .val { font-size: 12px; fill: var(--ink); font-weight: 600; } svg.chart .lbl { font-size: 12px; fill: var(--ink-2); }
+  .tree { list-style: none; margin: 0; padding: 0; }
+  .tree li { margin: 6px 0 6px 0; }
+  .tree ul { list-style: none; margin: 4px 0 0 22px; padding-left: 12px; border-left: 2px solid var(--line); }
+  .node { display: grid; grid-template-columns: minmax(160px, 1.4fr) 110px 60px minmax(90px, 1fr); align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; }
+  .node:hover { background: var(--surface-2); }
+  .node .name { font-weight: 600; } .node .name small { color: var(--ink-3); font-weight: 400; margin-left: 6px; }
+  .node .num { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+  .node .share { color: var(--ink-3); font-size: 12px; text-align: right; }
+  .bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; } .bar i { display: block; height: 100%; }
+  .bar i.adv { background: var(--adv); } .bar i.fav { background: var(--fav); }
+  .sub { grid-column: 1 / -1; font-size: 12px; color: var(--ink-2); padding: 0 0 2px 2px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); font-size: 11px; border: 1px solid var(--line); }
+  .pill.rec { border-color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  details { border-top: 1px solid var(--line); padding: 8px 0; } details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  summary .id { font-family: var(--mono); font-weight: 700; color: var(--chip-ink); background: var(--chip); padding: 1px 7px; border-radius: 6px; font-size: 12px; }
+  summary .kind { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+  .desc { color: var(--ink-2); font-size: 13px; margin: 6px 0 8px; }
+  .tablewrap { overflow-x: auto; }
+  pre { background: var(--surface-2); padding: 10px 12px; border-radius: 8px; font-family: var(--mono); font-size: 12px; overflow-x: auto; }
+  .kv { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+  .kv b { color: var(--ink); }
+  footer { margin-top: 24px; color: var(--ink-3); font-size: 12px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .warnbox { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); border: 1px solid var(--warn); border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 12px; }
+  @media print { .wrap { padding: 0; } section.card { break-inside: avoid; border-color: #ccc; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="eyebrow">Variance Detective · investigation {{ r.id }}</div>
+    <h1>{{ r.title }}</h1>
+    <div class="meta">
+      <span>source <code>{{ r.request.source }}</code></span>
+      <span>{{ r.tree.actual_version }} vs {{ r.tree.compare_version }}</span>
+      <span>{{ r.created_at }}</span>
+      <span>narrator: {{ r.llm_meta.get('narrator') }}{% if r.llm_meta.get('provider') %} ({{ r.llm_meta.get('provider') }} · {{ r.llm_meta.get('model') }}){% endif %}</span>
+    </div>
+  </div>
+  <div>
+    {% if verification.ok %}
+      <span class="badge ok">✓ {{ verification.verified_claims }}/{{ verification.total_claims }} claims verified against evidence</span>
+    {% else %}
+      <span class="badge warn">⚠ {{ verification.verified_claims }}/{{ verification.total_claims }} claims verified — see flags</span>
+    {% endif %}
+  </div>
+</header>
+
+<section class="card">
+  <div class="hero">
+    <div class="tile"><div class="k">{{ kpi.label }} · {{ r.tree.actual_version }}</div><div class="n">{{ headline.actual }}</div><div class="s">{{ r.request.period }}</div></div>
+    <div class="tile"><div class="k">{{ r.tree.compare_version }}</div><div class="n">{{ headline.comparison }}</div><div class="s">comparison</div></div>
+    <div class="tile"><div class="k">Variance</div><div class="n {{ 'adv' if headline.adverse else 'fav' }}">{{ headline.variance }}</div><div class="s">{{ headline.pct }} vs {{ r.tree.compare_version }}</div></div>
+    {% if rate_volume %}
+    <div class="tile"><div class="k">Rate effect</div><div class="n {{ 'adv' if root.rate_volume.rate_effect < 0 else 'fav' }}">{{ rate_volume.rate }}</div><div class="s">{{ rate_volume.r1 }} vs {{ rate_volume.r0 }} ({{ rate_volume.delta }})</div></div>
+    <div class="tile"><div class="k">Volume effect</div><div class="n {{ 'adv' if root.rate_volume.volume_effect < 0 else 'fav' }}">{{ rate_volume.volume }}</div><div class="s">via {{ rate_volume.driver }}</div></div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="card">
+  <p class="headline">{{ narrative.headline }}</p>
+  <p class="summary">{{ narrative.summary }}</p>
+  <div class="two">
+    <div>
+      <h2>Key findings</h2>
+      <ul class="claims">
+      {% for c in narrative.key_findings %}
+        <li><span class="{{ 'tick-ok' if c.verified else 'tick-warn' }}">{{ '✓' if c.verified else '⚠' }}</span>
+          <div>{{ c.statement }}
+            <div class="chips">{% for e in c.evidence_ids %}<a class="chip" href="#{{ e }}">{{ e }}</a>{% endfor %}</div>
+            {% for n in c.verification_notes %}<div class="note">{{ n }}</div>{% endfor %}
+          </div></li>
+      {% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h2>Root causes</h2>
+      <ul class="claims">
+      {% for c in narrative.root_causes %}
+        <li><span class="{{ 'tick-ok' if c.verified else 'tick-warn' }}">{{ '✓' if c.verified else '⚠' }}</span>
+          <div>{{ c.statement }}
+            <div class="chips">{% for e in c.evidence_ids %}<a class="chip" href="#{{ e }}">{{ e }}</a>{% endfor %}</div>
+            {% for n in c.verification_notes %}<div class="note">{{ n }}</div>{% endfor %}
+          </div></li>
+      {% else %}<li><span></span><div class="summary">No root-cause statements.</div></li>
+      {% endfor %}
+      </ul>
+      {% if narrative.recommended_actions %}
+      <h2 style="margin-top:16px">Recommended actions</h2>
+      <ol class="actions">{% for a in narrative.recommended_actions %}<li>{{ a }}</li>{% endfor %}</ol>
+      {% endif %}
+      {% if narrative.open_questions %}
+      <h2 style="margin-top:16px">Open questions</h2>
+      <ol class="actions">{% for a in narrative.open_questions %}<li>{{ a }}</li>{% endfor %}</ol>
+      {% endif %}
+      <div class="kv" style="margin-top:12px"><span>confidence <b>{{ narrative.confidence }}</b></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Variance walk — {{ r.tree.compare_version }} to {{ r.tree.actual_version }}</h2>
+  {{ waterfall_svg | safe }}
+  <div class="two" style="margin-top:14px">
+    {% if rv_svg %}<div><h2>Rate vs volume</h2>{{ rv_svg | safe }}</div>{% endif %}
+    {% if pvm_svg %}<div><h2>Price / volume / mix on {{ root.pvm.value_measure }}</h2>{{ pvm_svg | safe }}</div>{% endif %}
+  </div>
+  {% if leaves_svg %}<h2 style="margin-top:14px">Where it lands — deepest nodes</h2>{{ leaves_svg | safe }}{% endif %}
+</section>
+
+<section class="card">
+  <h2>Variance tree</h2>
+  {% macro render(n) %}
+    <li>
+      <div class="node">
+        <div class="name">{{ n.leaf }}{% if n.drill %}<small>↳ by {{ n.drill }}{% if n.coverage %} · {{ n.coverage }} covered{% endif %}</small>{% endif %}</div>
+        <div class="num {{ 'adv' if n.adverse else 'fav' }}">{{ n.variance }}</div>
+        <div class="share">{{ n.share }}</div>
+        <div class="bar"><i class="{{ 'adv' if n.adverse else 'fav' }}" style="width: {{ (n.share_num * 100) | round(1) }}%"></i></div>
+        <div class="sub">
+          <span>{{ n.actual }} vs {{ n.comparison }} ({{ n.pct }})</span>
+          {% if n.rate_volume %}<span>rate {{ n.rate_volume.rate }} ({{ n.rate_volume.delta }}) · volume {{ n.rate_volume.volume }}</span>{% endif %}
+          {% if n.recurrence %}<span class="pill rec">recurring · seen in {{ n.recurrence.prior_periods | join(', ') }}</span>{% endif %}
+          {% for m, val in n.offsets %}<span class="pill">offset: {{ m }} {{ val }}</span>{% endfor %}
+          <span>{% for e in n.evidence %}<a class="chip" href="#{{ e }}">{{ e }}</a> {% endfor %}</span>
+        </div>
+      </div>
+      {% if n.children %}<ul>{% for c in n.children %}{{ render(c) }}{% endfor %}</ul>{% endif %}
+    </li>
+  {% endmacro %}
+  <ul class="tree">{{ render(tree) }}</ul>
+</section>
+
+{% if r.memory_hits %}
+<section class="card">
+  <h2>Memory — what we found before</h2>
+  <table><thead><tr><th>Node</th><th class="num">Prior periods</th><th>Last explanation</th><th>Evidence</th></tr></thead><tbody>
+  {% for h in r.memory_hits %}<tr><td>{{ h.node }}</td><td class="num">{{ h.count }} · {{ h.periods | join(', ') }}</td><td>{{ h.last_explanation or '—' }}</td><td><a class="chip" href="#{{ h.evidence_id }}">{{ h.evidence_id }}</a></td></tr>{% endfor %}
+  </tbody></table>
+</section>
+{% endif %}
+
+{% if proposal %}
+<section class="card">
+  <h2>Plan PR — proposed forecast adjustment <span class="pill">{{ proposal.id }}</span> <span class="pill">{{ proposal.status }}</span></h2>
+  <p class="summary">Draft change to version <b>{{ proposal.target_version }}</b>. Nothing is written to the planning system until a reviewer approves and applies it.</p>
+  <div class="tablewrap"><table><thead><tr><th>Intersection</th><th>Measure</th><th class="num">Current</th><th class="num">Proposed</th><th class="num">Δ</th><th>Rationale</th><th>Evidence</th></tr></thead><tbody>
+  {% for ln in proposal.lines %}
+    <tr><td>{{ ln.path.values() | join(' › ') }}</td><td><code>{{ ln.measure }}</code></td><td class="num">{{ v(ln.current) }}</td><td class="num">{{ v(ln.proposed) }}</td><td class="num">{{ v(ln.delta, True) }}</td><td>{{ ln.rationale }}</td><td>{% for e in ln.evidence_ids %}<a class="chip" href="#{{ e }}">{{ e }}</a> {% endfor %}</td></tr>
+  {% endfor %}
+  </tbody></table></div>
+  <pre>vd pr approve {{ proposal.id }} --by "your.name"      # record approval
+vd pr apply   {{ proposal.id }}                      # push to the source's draft version</pre>
+</section>
+{% endif %}
+
+<section class="card">
+  <h2>Evidence ledger — {{ evidence | length }} items</h2>
+  {% for e in evidence %}
+  <details id="{{ e.id }}">
+    <summary><span class="id">{{ e.id }}</span><span class="kind">{{ e.kind }}</span><span>{{ e.title }}</span>{% if e.source %}<span class="kind">· {{ e.source }}</span>{% endif %}</summary>
+    <div class="desc">{{ e.description }}</div>
+    {% if e.values %}<div class="kv">{% for k, val in e.values.items() %}{% if not k.startswith('_') and val is not mapping %}<span>{{ k }} <b>{{ val }}</b></span>{% endif %}{% endfor %}</div>{% endif %}
+    {% if e.table %}
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr>{% for c in e.columns %}<th class="{{ 'num' if e.table[0][c] is number else '' }}">{{ c }}</th>{% endfor %}</tr></thead><tbody>
+    {% for row in e.table %}<tr>{% for c in e.columns %}<td class="{{ 'num' if row[c] is number else '' }}">{{ row[c] if row[c] is not none else '—' }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody></table></div>
+    {% if e.values.get('_truncated_rows') %}<div class="desc">… {{ e.values['_truncated_rows'] }} more rows not shown.</div>{% endif %}
+    {% endif %}
+  </details>
+  {% endfor %}
+</section>
+
+{% if r.warnings %}
+<div class="warnbox"><b>Warnings</b><ul style="margin:6px 0 0 18px;padding:0">{% for w in r.warnings %}<li>{{ w }}</li>{% endfor %}</ul></div>
+{% endif %}
+
+<footer>
+  <span>Variance Detective v{{ version }}</span>
+  <span>fetch {{ r.timings_ms.get('fetch') }} ms · analysis {{ r.timings_ms.get('analysis') }} ms · narrative {{ r.timings_ms.get('narrative') }} ms</span>
+  {% if r.llm_meta.get('input_tokens') %}<span>tokens {{ r.llm_meta.get('input_tokens') }} in / {{ r.llm_meta.get('output_tokens') }} out</span>{% endif %}
+  <span>Every figure above is computed deterministically; the narrative only cites the evidence ledger.</span>
+</footer>
+</div>
+</body>
+</html>

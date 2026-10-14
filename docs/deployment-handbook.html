@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Variance Detective Handbook</title>
+<meta name="description" content="How to install, connect, secure, run and roll out the Variance Detective agent inside a company — on a laptop, in a container, on AWS Bedrock or Azure OpenAI.">
+<style>
+  :root {
+    color-scheme: light;
+    --page:#f9f9f7; --surface:#fcfcfb; --surface-2:#f1f1ee; --line:#e3e2dd;
+    --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#7a7974;
+    --accent:#2a78d6; --accent-ink:#184f95; --chip:#e8f0fb; --warn:#fab219; --good:#0ca30c; --crit:#d03b3b;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; --page:#0d0d0d; --surface:#1a1a19; --surface-2:#232322; --line:#2e2e2c; --ink:#f0efec; --ink-2:#c3c2b7; --ink-3:#8f8e86; --accent:#3987e5; --accent-ink:#9ec5f4; --chip:#1d2c40; } }
+  :root[data-theme="dark"] { color-scheme: dark; --page:#0d0d0d; --surface:#1a1a19; --surface-2:#232322; --line:#2e2e2c; --ink:#f0efec; --ink-2:#c3c2b7; --ink-3:#8f8e86; --accent:#3987e5; --accent-ink:#9ec5f4; --chip:#1d2c40; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:var(--page); color:var(--ink); font-family:var(--sans); font-size:15.5px; line-height:1.55; }
+  .layout { display:grid; grid-template-columns: 240px minmax(0,1fr); max-width:1180px; margin:0 auto; gap:32px; padding:32px 16px 80px; }
+  nav { position:sticky; top:24px; align-self:start; font-size:13.5px; }
+  nav a { display:block; color:var(--ink-2); text-decoration:none; padding:4px 10px; border-left:2px solid transparent; border-radius:0 6px 6px 0; }
+  nav a:hover { background:var(--surface-2); color:var(--ink); } nav .h { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); margin:14px 0 4px 10px; }
+  @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } nav { position:static; display:flex; flex-wrap:wrap; gap:4px; } nav .h { display:none; } nav a { border:1px solid var(--line); border-radius:999px; padding:3px 10px; } }
+  main > header { margin-bottom:28px; }
+  .eyebrow { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+  h1 { font-size:34px; letter-spacing:-0.02em; margin:4px 0 6px; line-height:1.15; }
+  .lede { font-size:18px; color:var(--ink-2); max-width:62ch; margin:0; }
+  h2 { font-size:22px; letter-spacing:-0.01em; margin:44px 0 10px; padding-top:12px; border-top:1px solid var(--line); }
+  h3 { font-size:16.5px; margin:22px 0 6px; }
+  p { margin:8px 0; max-width:74ch; }
+  code { font-family:var(--mono); font-size:0.88em; background:var(--surface-2); padding:1px 5px; border-radius:5px; }
+  pre { background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:12px 14px; overflow-x:auto; font-family:var(--mono); font-size:12.5px; line-height:1.5; }
+  pre code { background:none; padding:0; font-size:inherit; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin:14px 0; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin:12px 0; }
+  .grid .card { margin:0; } .card h4 { margin:0 0 6px; font-size:15px; } .card p { font-size:14px; color:var(--ink-2); margin:4px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; margin:10px 0; } th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; } th { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); }
+  .pill { display:inline-block; padding:1px 9px; border-radius:999px; background:var(--chip); color:var(--accent-ink); font-size:12px; font-weight:600; }
+  .callout { border-left:4px solid var(--accent); background:var(--surface); padding:10px 14px; border-radius:0 10px 10px 0; margin:12px 0; }
+  .callout.warn { border-color:var(--warn); } .callout.crit { border-color:var(--crit); }
+  ol.steps { counter-reset: s; list-style:none; padding:0; margin:12px 0; } ol.steps > li { counter-increment:s; position:relative; padding:10px 0 10px 44px; border-top:1px solid var(--line); }
+  ol.steps > li::before { content: counter(s); position:absolute; left:0; top:10px; width:30px; height:30px; border-radius:50%; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; }
+  ol.steps b { display:block; margin-bottom:2px; }
+  svg.diagram { width:100%; height:auto; display:block; font-family:var(--sans); }
+  svg.diagram text { fill:var(--ink); font-size:12.5px; } svg.diagram .box { fill:var(--surface); stroke:var(--line); stroke-width:1.2; rx:10; } svg.diagram .hl { fill:var(--chip); stroke:var(--accent); } svg.diagram .muted { fill:var(--ink-3); font-size:11px; } svg.diagram .arrow { stroke:var(--ink-3); stroke-width:1.5; fill:none; marker-end:url(#a); }
+  .kbd { font-family:var(--mono); font-size:12px; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:0 6px; background:var(--surface); }
+  footer { margin-top:48px; color:var(--ink-3); font-size:13px; border-top:1px solid var(--line); padding-top:14px; }
+  @media print { nav { display:none; } .layout { grid-template-columns:1fr; } h2 { break-before:page; } }
+</style>
+</head>
+<body>
+<div class="layout">
+<nav>
+  <div class="h">Handbook</div>
+  <a href="#what">1 · What you are deploying</a>
+  <a href="#topologies">2 · Deployment topologies</a>
+  <a href="#install">3 · Install in 15 minutes</a>
+  <a href="#llm">4 · Choose and wire the model</a>
+  <a href="#sources">5 · Connect planning systems</a>
+  <a href="#security">6 · Security &amp; governance</a>
+  <a href="#operate">7 · Run it monthly</a>
+  <a href="#containers">8 · Containers &amp; cloud</a>
+  <a href="#rollout">9 · Six-week rollout plan</a>
+  <a href="#extend">10 · Extend</a>
+  <a href="#runbook">11 · Runbook &amp; FAQ</a>
+</nav>
+
+<main>
+<header>
+  <div class="eyebrow">Variance Detective · deployment handbook · v0.1</div>
+  <h1>Putting an evidence-backed variance agent into a finance team</h1>
+  <p class="lede">Everything needed to install, connect, secure, run and roll out Variance Detective in a company — from an analyst's laptop to a scheduled service on AWS Bedrock or Azure OpenAI.</p>
+</header>
+
+<h2 id="what">1 · What you are deploying</h2>
+<p>Variance Detective answers one question — <em>why did this KPI move against plan?</em> — and answers it in a way finance can audit. It reads facts from any planning or ERP system through MCP, decomposes the variance deterministically, writes a narrative in which every number is cited to an evidence id and machine-verified, remembers what it found last month, and drafts a forecast adjustment that a human approves.</p>
+
+<svg class="diagram" viewBox="0 0 980 300" role="img" aria-label="Pipeline">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink-3)"/></marker></defs>
+  <g>
+    <rect class="box" x="10" y="100" width="150" height="70"/><text x="85" y="128" text-anchor="middle" font-weight="600">Planning / ERP</text><text x="85" y="148" text-anchor="middle" class="muted">SAC · Anaplan · Oracle · CSV</text>
+    <rect class="box" x="200" y="100" width="140" height="70"/><text x="270" y="128" text-anchor="middle" font-weight="600">MCP connector</text><text x="270" y="148" text-anchor="middle" class="muted">stdio · HTTP · SSE</text>
+    <rect class="box hl" x="380" y="100" width="150" height="70"/><text x="455" y="128" text-anchor="middle" font-weight="600">Semantic model</text><text x="455" y="148" text-anchor="middle" class="muted">canonical dims &amp; KPIs</text>
+    <rect class="box" x="570" y="100" width="150" height="70"/><text x="645" y="128" text-anchor="middle" font-weight="600">Variance tree</text><text x="645" y="148" text-anchor="middle" class="muted">pandas · deterministic</text>
+    <rect class="box" x="760" y="100" width="200" height="70"/><text x="860" y="128" text-anchor="middle" font-weight="600">Narrative + verifier</text><text x="860" y="148" text-anchor="middle" class="muted">LLM or template · cites E-ids</text>
+    <path class="arrow" d="M160,135 L198,135"/><path class="arrow" d="M340,135 L378,135"/><path class="arrow" d="M530,135 L568,135"/><path class="arrow" d="M720,135 L758,135"/>
+    <rect class="box" x="380" y="210" width="150" height="60"/><text x="455" y="236" text-anchor="middle" font-weight="600">Evidence ledger</text><text x="455" y="254" text-anchor="middle" class="muted">every table, every number</text>
+    <rect class="box" x="570" y="210" width="150" height="60"/><text x="645" y="236" text-anchor="middle" font-weight="600">Memory</text><text x="645" y="254" text-anchor="middle" class="muted">recurrence across periods</text>
+    <rect class="box" x="760" y="210" width="200" height="60"/><text x="860" y="236" text-anchor="middle" font-weight="600">Plan PR → report</text><text x="860" y="254" text-anchor="middle" class="muted">human approval · HTML/MD/JSON</text>
+    <path class="arrow" d="M645,170 L645,208"/><path class="arrow" d="M860,170 L860,208"/><path class="arrow" d="M455,170 L455,208"/>
+    <rect class="box" x="200" y="20" width="330" height="50"/><text x="365" y="42" text-anchor="middle" font-weight="600">Model provider</text><text x="365" y="60" text-anchor="middle" class="muted">Anthropic · Amazon Bedrock · Azure OpenAI · OpenAI-compatible · offline</text>
+    <path class="arrow" d="M530,45 C 700,45 760,60 820,98"/>
+  </g>
+</svg>
+
+<div class="grid">
+  <div class="card"><h4>What goes to the model</h4><p>A compact JSON of the variance tree: node labels, rounded values, pre-formatted display strings and evidence ids. <b>Never raw rows</b>, never credentials, never the whole dataset.</p></div>
+  <div class="card"><h4>What the model may do</h4><p>Explain. It cannot compute, cannot write to a system, and cannot state a number that is not in the evidence — the verifier flags anything that slips.</p></div>
+  <div class="card"><h4>What stays on your side</h4><p>All data, the evidence ledger, memory (SQLite), proposals (JSON) and reports — in <code>workspace/</code> or wherever you mount it.</p></div>
+</div>
+
+<h2 id="topologies">2 · Deployment topologies</h2>
+<p>Pick the smallest one that fits. They share the same code and configuration; moving up is a packaging change.</p>
+<table>
+  <tr><th>Topology</th><th>Who runs it</th><th>How</th><th>Fits when</th></tr>
+  <tr><td><span class="pill">A</span> Analyst laptop</td><td>FP&amp;A analyst</td><td><code>pip install</code>, <code>vd investigate … --open</code></td><td>Pilot, ad-hoc questions, one or two users</td></tr>
+  <tr><td><span class="pill">B</span> Scheduled batch</td><td>Platform / data team</td><td>Container + cron / Airflow / Step Functions / ADF; reports to S3 / SharePoint / Teams</td><td>Monthly close pack, several KPIs × entities</td></tr>
+  <tr><td><span class="pill">C</span> Service + API</td><td>Platform team</td><td><code>uvicorn variance_detective.api:app</code> on ECS/Fargate or Azure Container Apps behind SSO</td><td>Other tools call it: Slack/Teams bot, BI "explain" button, another agent</td></tr>
+  <tr><td><span class="pill">D</span> Tool inside an agent platform</td><td>AI platform team</td><td>Expose <code>/investigate</code> as a tool to Bedrock Agents / Copilot Studio / Claude; or wrap the CLI as an MCP server</td><td>Enterprise assistant strategy already exists</td></tr>
+</table>
+
+<h2 id="install">3 · Install in 15 minutes (topology A)</h2>
+<ol class="steps">
+  <li><b>Prerequisites</b> Python 3.11+ (3.12 recommended), git, and for SAC-MCP: <code>uv</code> (<code>pip install uv</code>). Windows, macOS and Linux all work.</li>
+  <li><b>Get the code</b><pre><code>git clone &lt;repo&gt; variance-detective && cd variance-detective
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"</code></pre></li>
+  <li><b>Prove the engine offline</b><pre><code>vd demo --open</code></pre>Two investigations run on the synthetic retailer: February seeds memory, March finds three South stores with margin-rate erosion, flags S07 as recurring, drafts a Plan PR, and opens the HTML report. No keys, no network.</li>
+  <li><b>Run the tests</b> <code>pytest</code> — 19 tests including a live MCP round-trip through a fake server.</li>
+  <li><b>Add a model</b> (section 4) and <b>connect your first system</b> (section 5). Both are configuration.</li>
+  <li><b>First real investigation</b><pre><code>vd sources test sac
+vd investigate --kpi gross_margin --period 2026-03 --source sac --open</code></pre></li>
+</ol>
+
+<h2 id="llm">4 · Choose and wire the model</h2>
+<p>One provider class per vendor sits behind a single <code>complete()</code> call. Choose with <code>llm.provider</code> in <code>config/agent.yaml</code>, or override per run with <code>--provider</code>/<code>--model</code>, or via environment: <code>VD_LLM__PROVIDER</code>, <code>VD_LLM__MODEL</code>. Secrets are read by the vendor SDKs from the environment only.</p>
+
+<h3>Amazon Bedrock (recommended for AWS-first companies)</h3>
+<ol class="steps">
+  <li><b>Enable model access</b> in the Bedrock console for the region you will use (e.g. <code>eu-west-2</code>); for cross-region resilience use an inference profile ARN as the model id.</li>
+  <li><b>Create an IAM role</b> for the runner (ECS task role / EC2 instance role / your SSO role) with <code>deploy/aws/bedrock-iam-policy.json</code> — invoke rights on the approved model ARNs only, read on the agent's secrets, write on the report bucket.</li>
+  <li><b>Configure</b><pre><code>pip install -e ".[bedrock]"
+export AWS_REGION=eu-west-2            # or AWS_PROFILE=finance-ai
+export VD_LLM__PROVIDER=bedrock
+export VD_LLM__MODEL=anthropic.claude-sonnet-4-5-20250929-v1:0
+vd demo</code></pre></li>
+  <li><b>Harden</b> Put Bedrock behind a VPC interface endpoint (PrivateLink) so prompts never traverse the public internet; enable Bedrock invocation logging to CloudWatch/S3 for audit; attach Bedrock Guardrails if your AI policy requires it.</li>
+</ol>
+
+<h3>Azure OpenAI (recommended for Microsoft-first companies)</h3>
+<ol class="steps">
+  <li><b>Create an Azure OpenAI resource</b> in an approved region and <b>deploy a model</b> (e.g. <code>gpt-4o</code>); note the deployment name.</li>
+  <li><b>Auth</b> Simplest: an API key in Key Vault surfaced as <code>AZURE_OPENAI_API_KEY</code>. Preferred: Entra ID managed identity — assign <em>Cognitive Services OpenAI User</em> to the runner identity and swap the key for <code>azure_ad_token_provider</code> in <code>llm/providers.py</code> (a 5-line change, documented inline).</li>
+  <li><b>Configure</b><pre><code>pip install -e ".[azure]"
+export AZURE_OPENAI_ENDPOINT=https://&lt;resource&gt;.openai.azure.com
+export AZURE_OPENAI_DEPLOYMENT=gpt-4o
+export AZURE_OPENAI_API_KEY=...        # or managed identity
+export VD_LLM__PROVIDER=azure_openai
+vd demo</code></pre></li>
+  <li><b>Harden</b> Private endpoint + disable public network access; Azure Monitor diagnostic logs; content filters at the default level are fine for finance narrative.</li>
+</ol>
+
+<h3>Anthropic API, local or other</h3>
+<pre><code># Anthropic API
+pip install -e ".[anthropic]"; export ANTHROPIC_API_KEY=...; vd demo --provider anthropic --model claude-sonnet-4-5
+# Local / air-gapped with Ollama (OpenAI-compatible)
+pip install -e ".[openai]"; export OPENAI_BASE_URL=http://localhost:11434/v1 OPENAI_API_KEY=ollama
+vd demo --provider openai --model llama3.1
+# No model at all — deterministic template narrator (CI, demos, strict environments)
+vd demo --provider offline</code></pre>
+
+<div class="callout"><b>Model choice guidance.</b> The narrative is a constrained explanation task over ~5–8k input tokens; a mid-tier model (Claude Sonnet, GPT-4o) is more than sufficient. Cost per investigation is a few cents. If a model returns malformed JSON the narrator retries once with the validation error and then falls back to the template narrator — the report says so in a visible warning, never silently.</div>
+
+<h2 id="sources">5 · Connect planning systems</h2>
+<p>A source is two YAML blocks: its <em>vocabulary</em> (semantic mapping) and its <em>transport + tool map</em> (connector). No code.</p>
+
+<h3>5.1 Map the vocabulary — <code>config/semantic_model.yaml</code></h3>
+<pre><code>sources:
+  sac_planning:
+    dimensions: { time: Date, version: Version, region: Region, store: Store, channel: Channel, category: ProductCategory }
+    measures:   { net_sales: NetSales, cogs: COGS, units: Units }       # or expressions: "GrossSales - Returns"
+    members:
+      version: { Actual: public.Actual, Forecast: public.Forecast }</code></pre>
+
+<h3>5.2 Register the connector — <code>config/sources.yaml</code></h3>
+<pre><code>sources:
+  sac:
+    type: mcp
+    semantics: sac_planning
+    transport: stdio                     # or streamable_http / sse with url + headers
+    command: uvx
+    args: ["sac-mcp"]
+    env: { SAC_TENANT_URL: "${SAC_TENANT_URL}", SAC_CLIENT_ID: "${SAC_CLIENT_ID}", SAC_CLIENT_SECRET: "${SAC_CLIENT_SECRET}" }
+    capabilities: { write_draft: true }
+    operations:
+      describe:   { tool: get_model_metadata, arguments: { model_id: "${SAC_MODEL_ID}" } }
+      read_facts:
+        tool: read_fact_data
+        arguments: { model_id: "${SAC_MODEL_ID}", filters: "{filters}", measures: "{measures}", dimensions: "{dimensions}" }
+        result_path: data
+      write_draft:
+        tool: upload_job_data
+        arguments: { model_id: "${SAC_MODEL_ID}", version: "{target_version}", rows: "{rows}" }</code></pre>
+<p>Placeholders: <code>{filters}</code> → <code>{source_col: [members]}</code>, <code>{measures}</code>, <code>{dimensions}</code>, <code>{filter_first:Version}</code>. The connector re-applies filters locally after the call, so a server that ignores a filter still yields correct numbers.</p>
+
+<h3>5.3 Per-system notes</h3>
+<table>
+  <tr><th>System</th><th>Route</th><th>Notes</th></tr>
+  <tr><td>SAP Analytics Cloud</td><td>SAC-MCP (stdio)</td><td>OAuth client in SAC (App Integration → OAuth Clients), scope on the planning model; use the Data Export API-backed tools for large reads; write-back must target a <b>private version</b>.</td></tr>
+  <tr><td>SAP Datasphere / BW</td><td>Datasphere MCP or SQL MCP</td><td>Expose an analytic model or view; <code>read_facts</code> maps to a query tool returning records.</td></tr>
+  <tr><td>Anaplan</td><td>Anaplan MCP / thin exporter</td><td>Module export via Integration API; Versions dimension → canonical <code>version</code>; write to a scenario, not the live forecast.</td></tr>
+  <tr><td>Oracle EPM (Planning)</td><td>REST → small MCP</td><td>Export data slice REST endpoint wrapped as <code>read_fact_data</code>; sandbox for write-back.</td></tr>
+  <tr><td>OneStream / Workday Adaptive</td><td>REST → small MCP</td><td>Same pattern; one tool, one result shape.</td></tr>
+  <tr><td>Warehouse (Snowflake, Databricks, BigQuery)</td><td>Vendor MCP or SQL MCP</td><td>Point <code>read_facts</code> at a query tool; use a view that already joins actual and forecast.</td></tr>
+  <tr><td>Files</td><td><code>type: csv</code></td><td>CSV/Parquet file or folder; good for pilots and for systems with no API.</td></tr>
+</table>
+<div class="callout"><b>Writing your own connector</b> for an unusual API is ~40 lines: subclass <code>DataConnector</code>, implement <code>_read_source(query)</code> returning a DataFrame in the source's own column names, register it in <code>connectors/registry.py</code>. Mapping, aggregation, evidence and everything downstream are inherited.</div>
+
+<h2 id="security">6 · Security &amp; governance</h2>
+<div class="grid">
+  <div class="card"><h4>Identity &amp; least privilege</h4><p>One service identity per environment. Read-only on the planning model for investigation; a separate identity with write scope on a <em>draft</em> version for <code>vd pr apply</code>.</p></div>
+  <div class="card"><h4>Secrets</h4><p>Never in YAML. Environment variables injected from Secrets Manager / Key Vault / Vault at runtime; <code>.env</code> only on laptops and git-ignored.</p></div>
+  <div class="card"><h4>Network</h4><p>Model endpoints over PrivateLink / private endpoints; MCP servers over stdio in the same container or over HTTPS inside the VPC/VNet with mTLS or bearer tokens.</p></div>
+  <div class="card"><h4>Data minimisation</h4><p>The model receives aggregated node values and display strings, not row-level data. Evidence tables are capped at 25 rows in reports (<code>reporting.evidence_rows_limit</code>).</p></div>
+  <div class="card"><h4>Human in the loop</h4><p>Writes are proposals (<code>workspace/proposals/*.json</code>). <code>vd pr approve --by</code> records identity + timestamp; only approved proposals can be applied; only to the configured draft version.</p></div>
+  <div class="card"><h4>Audit trail</h4><p>The JSON report is a full record: request, tree, every evidence table, the narrative with per-claim verification, model id, token usage, timings, warnings. Keep it in object storage with retention.</p></div>
+</div>
+<div class="callout warn"><b>Policy checklist before go-live:</b> AI usage policy signed off for the chosen provider · data classification confirmed (financial, internal) · DPIA not required unless employee-level data is in scope · model region matches data-residency rules · report storage has retention and access control · an owner is named for approving Plan PRs.</div>
+
+<h2 id="operate">7 · Run it monthly</h2>
+<h3>Schedule</h3>
+<p>Run on working day 2–3 after close for each KPI × entity you report on. One <code>vd investigate</code> per KPI; add <code>--scope entity=UK</code> for entity packs. Example cron: <code>0 6 3 * * cd /opt/vd && vd investigate --kpi gross_margin --period $(date +%Y-%m) --source sac</code>. Airflow DAG in <code>deploy/airflow/</code>.</p>
+<h3>Distribute</h3>
+<p>HTML reports are self-contained (no scripts, light/dark, print-ready). Post to SharePoint/Confluence, attach to the close deck, or push the Markdown into the commentary field of your planning tool. For Teams/Slack, post the headline + link via their MCP server or webhook from the scheduler.</p>
+<h3>Monitor these four numbers</h3>
+<table>
+  <tr><th>Metric</th><th>Where</th><th>Healthy</th></tr>
+  <tr><td>Verification score</td><td><code>verification.score</code> in the JSON report</td><td>1.0 (template) · ≥ 0.9 (LLM); investigate any drop</td></tr>
+  <tr><td>Fallback rate</td><td><code>llm.fallback</code> present</td><td>&lt; 5 % of runs</td></tr>
+  <tr><td>Fetch time</td><td><code>timings_ms.fetch</code></td><td>Stable month to month; a jump means a source changed</td></tr>
+  <tr><td>Plan PR turnaround</td><td>proposal <code>created_at</code> → approval</td><td>Approved or rejected before the next cycle</td></tr>
+</table>
+<h3>Review prompts like code</h3>
+<p>Prompts live in one file (<code>agent/prompts.py</code>). Changes go through pull request with the demo and tests as regression; the verifier is your safety net for prompt drift.</p>
+
+<h2 id="containers">8 · Containers &amp; cloud</h2>
+<pre><code>docker build -t variance-detective .
+docker run --rm -v $PWD/workspace:/app/workspace -e VD_LLM__PROVIDER=offline variance-detective vd demo
+docker compose up api            # http://localhost:8080/docs — POST /investigate, GET /proposals</code></pre>
+<h3>AWS</h3>
+<p>Push the image to ECR. Run as an ECS Fargate <b>scheduled task</b> (EventBridge rule, monthly) for topology B, or as a Fargate <b>service</b> behind an internal ALB with IAM/SSO for topology C. Task role = <code>deploy/aws/bedrock-iam-policy.json</code>; mount EFS or sync <code>/app/workspace</code> to S3 after each run. Secrets via Secrets Manager → task definition <code>secrets</code>.</p>
+<h3>Azure</h3>
+<p>Push to ACR. Topology B: Azure Container Apps <b>Job</b> on a cron trigger (or Azure Data Factory custom activity). Topology C: Container Apps <b>app</b> with managed identity, Easy Auth (Entra) in front, Key Vault references for secrets, Azure Files mounted at <code>/app/workspace</code>.</p>
+<h3>Anywhere else</h3>
+<p>It is a plain Python process: Kubernetes CronJob, GitHub Actions on a schedule (demo runs there today), or a VM with cron all work.</p>
+
+<h2 id="rollout">9 · Six-week rollout plan</h2>
+<ol class="steps">
+  <li><b>Week 1 — Prove on an export.</b> Export last quarter's actual + forecast to CSV, map it as a <code>csv</code> source, run three months in sequence so memory builds. Success: the agent finds the drivers the team already knows.</li>
+  <li><b>Week 2 — Connect the live system (read-only).</b> Service identity, MCP source, <code>vd sources test</code>. Success: identical numbers to the export.</li>
+  <li><b>Week 3 — Add the model.</b> Bedrock or Azure. Compare LLM narrative vs template on the same evidence; tune prompts. Success: verification ≥ 0.9, analysts prefer the prose.</li>
+  <li><b>Week 4 — Shadow the close.</b> Run on WD3 alongside the manual commentary. Success: ≥ 70 % of manual explanations appear in the report; time-to-commentary halves.</li>
+  <li><b>Week 5 — Plan PR in anger.</b> Review the drafted adjustments in the forecast meeting; approve/reject in the tool; apply to a draft version. Success: at least one approved proposal applied without manual re-keying.</li>
+  <li><b>Week 6 — Productionise.</b> Container, schedule, monitoring, report distribution, owner for proposals. Hand over with this handbook and the architecture doc.</li>
+</ol>
+
+<h2 id="extend">10 · Extend</h2>
+<h3>A new KPI</h3>
+<pre><code>kpis:
+  opex:
+    label: Operating Expenses
+    formula: "opex"
+    direction: lower_is_better
+    drill_dimensions: [cost_center, account, entity]</code></pre>
+<h3>A new source</h3><p>Sections 5.1–5.2. Test with <code>vd sources test</code>.</p>
+<h3>A sibling agent</h3>
+<p>Every agent in this family shares connectors, semantic model, evidence ledger, memory, verifier and reporting. A new agent is a new <code>analysis/</code> module (the deterministic skill) and a narrator template. Candidates, in order of value: Forecast Integrity (bias scoring), Reconciler (which number is right), Cycle Operator (budget season PMO), Model Guardian (model change impact). They can cite each other's evidence ids because the ledger is just ids and tables.</p>
+
+<h2 id="runbook">11 · Runbook &amp; FAQ</h2>
+<table>
+  <tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr>
+  <tr><td><code>No data returned for …</code></td><td>Period or version member names don't match the source</td><td>Check <code>members.version</code> mapping and the time format the server expects; <code>vd sources test</code> shows metadata</td></tr>
+  <tr><td><code>Source result lacks column 'X'</code></td><td>Semantic mapping names a column the tool doesn't return</td><td>Fix <code>dimensions</code>/<code>measures</code> in the source semantics, or <code>result_path</code></td></tr>
+  <tr><td>⚠ claims flagged in report</td><td>Model quoted a number not in evidence</td><td>Nothing is hidden — read the flag. Persistent: lower temperature, check prompt edits, or switch model</td></tr>
+  <tr><td>Report says "used template narrator instead"</td><td>Provider error (auth, quota, network) or malformed JSON twice</td><td>See <code>llm.error</code> in the JSON report; fix credentials/endpoint</td></tr>
+  <tr><td><code>Provider 'bedrock' needs an optional dependency</code></td><td>SDK not installed</td><td><code>pip install -e ".[bedrock]"</code> (or <code>[all]</code>)</td></tr>
+  <tr><td>Drill stops too early / too late</td><td><code>analysis.max_depth</code>, <code>coverage_target</code>, materiality</td><td>Tune in <code>agent.yaml</code>; override per run via <code>VD_ANALYSIS__MAX_DEPTH</code></td></tr>
+  <tr><td>Recurrence never fires</td><td>Memory disabled, cleared, or node labels differ</td><td>Keep the same drill dimensions month to month; memory keys on sorted path, not order</td></tr>
+</table>
+<h3>FAQ</h3>
+<p><b>Does the model see our data?</b> It sees aggregated node values and formatted strings for the nodes in the tree — typically a few hundred numbers — never row-level rows. With Bedrock/Azure private endpoints nothing leaves your cloud boundary.</p>
+<p><b>Can it run without any model?</b> Yes — <code>--provider offline</code> uses the template narrator, which produces fully verified prose. Many teams start there.</p>
+<p><b>Can it change our forecast?</b> Only through a Plan PR that a named person approves, and only to the draft version you configure.</p>
+<p><b>What if two systems disagree?</b> That is the next agent (Reconciler). Today you can run the same investigation against two sources and compare the headline evidence.</p>
+
+<footer>Variance Detective · Apache-2.0 · See <code>docs/architecture.md</code> for the design rationale and <code>README.md</code> for commands.</footer>
+</main>
+</div>
+</body>
+</html>

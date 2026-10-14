@@ -1,0 +1,67 @@
+# Data sources. Each entry picks a connector (`type`) and a semantics key from semantic_model.yaml.
+# Add a new planning system here — no code changes.
+
+sources:
+  # 1) Local file — the demo dataset (synthetic UK retailer).
+  demo:
+    type: csv
+    label: Demo retailer (synthetic)
+    semantics: default
+    path: demo/data/facts.csv
+
+  # 2) SAP Analytics Cloud through SAC-MCP (stdio). Adjust tool names/arguments to your server.
+  sac:
+    type: mcp
+    label: SAP Analytics Cloud (via SAC-MCP)
+    semantics: sac_planning
+    transport: stdio
+    command: uvx
+    args: ["sac-mcp"]
+    env:
+      SAC_TENANT_URL: ${SAC_TENANT_URL:-}
+      SAC_CLIENT_ID: ${SAC_CLIENT_ID:-}
+      SAC_CLIENT_SECRET: ${SAC_CLIENT_SECRET:-}
+      SAC_TOKEN_URL: ${SAC_TOKEN_URL:-}
+    capabilities:
+      write_draft: true
+    operations:
+      describe:
+        tool: get_model_metadata
+        arguments: { model_id: "${SAC_MODEL_ID:-}" }
+      read_facts:
+        tool: read_fact_data
+        arguments:
+          model_id: "${SAC_MODEL_ID:-}"
+          filters: "{filters}"          # {source_col: [members]} — e.g. {"Version": ["public.Actual"], "Date": ["202603"]}
+          measures: "{measures}"
+          dimensions: "{dimensions}"
+          limit: 200000
+        result_path: data
+        record_format: records
+      write_draft:
+        tool: upload_job_data
+        arguments:
+          model_id: "${SAC_MODEL_ID:-}"
+          version: "{target_version}"     # point this at a private/draft version in SAC
+          rows: "{rows}"
+          comment: "Variance Detective proposal {proposal_id}"
+
+  # 3) Any MCP server over HTTP (Anaplan / Oracle EPM / OneStream / Workday Adaptive / a data warehouse).
+  planning_http:
+    type: mcp
+    label: Planning system over Streamable HTTP
+    semantics: anaplan_pl
+    transport: streamable_http
+    url: ${PLANNING_MCP_URL:-http://localhost:8000/mcp}
+    headers:
+      Authorization: "Bearer ${PLANNING_MCP_TOKEN:-}"
+    operations:
+      read_facts:
+        tool: export_module
+        arguments:
+          module: "P&L by Store"
+          filters: "{filters}"
+          columns: "{dimensions}"
+          measures: "{measures}"
+        result_path: ""
+        record_format: records

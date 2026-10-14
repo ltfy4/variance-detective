@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gross Margin — 2026-03 — Actual vs Forecast</title>
+<meta name="description" content="Gross Margin -£343k vs Forecast in 2026-03 — concentrated in South › Store › Womenswear › S03">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7; --surface: #fcfcfb; --surface-2: #f1f1ee; --line: #e3e2dd; --grid: #ebebe7;
+    --ink: #0b0b0b; --ink-2: #52514e; --ink-3: #7a7974;
+    --fav: #2a78d6; --adv: #e34948; --neu: #9a9993;
+    --good: #0ca30c; --warn: #fab219; --crit: #d03b3b;
+    --accent: #2a78d6; --chip: #e8f0fb; --chip-ink: #184f95;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface: #1a1a19; --surface-2: #232322; --line: #2e2e2c; --grid: #2a2a28;
+      --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86;
+      --fav: #3987e5; --adv: #e66767; --neu: #6f6e68;
+      --chip: #1d2c40; --chip-ink: #9ec5f4;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --surface-2: #232322; --line: #2e2e2c; --grid: #2a2a28;
+    --ink: #f0efec; --ink-2: #c3c2b7; --ink-3: #8f8e86;
+    --fav: #3987e5; --adv: #e66767; --neu: #6f6e68;
+    --chip: #1d2c40; --chip-ink: #9ec5f4;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--page); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.5; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 16px 64px; }
+  header.top { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+  h1 { font-size: 26px; margin: 2px 0 4px; letter-spacing: -0.01em; }
+  h2 { font-size: 17px; margin: 0 0 12px; letter-spacing: -0.005em; }
+  .meta { color: var(--ink-3); font-size: 13px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+  .meta code { font-family: var(--mono); font-size: 12px; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); }
+  .badge.ok { color: var(--good); } .badge.warn { color: var(--crit); }
+  section.card { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; margin-top: 18px; }
+  .hero { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .tile { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; }
+  .tile .k { font-size: 12px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+  .tile .n { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .tile .s { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .adv { color: var(--adv); } .fav { color: var(--fav); }
+  .headline { font-size: 20px; font-weight: 650; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .summary { color: var(--ink-2); margin: 0 0 16px; }
+  ul.claims { list-style: none; padding: 0; margin: 0; }
+  ul.claims li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+  ul.claims li:first-child { border-top: 0; }
+  .tick-ok { color: var(--good); font-weight: 700; } .tick-warn { color: var(--crit); font-weight: 700; }
+  .chips { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-family: var(--mono); font-size: 11px; background: var(--chip); color: var(--chip-ink); padding: 1px 7px; border-radius: 6px; text-decoration: none; }
+  .note { font-size: 12px; color: var(--crit); margin-top: 4px; }
+  ol.actions { margin: 0; padding-left: 20px; } ol.actions li { margin: 4px 0; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; } @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+  svg.chart { width: 100%; height: auto; display: block; font-family: var(--sans); }
+  svg.chart .tick { font-size: 11px; fill: var(--ink-3); } svg.chart .val { font-size: 12px; fill: var(--ink); font-weight: 600; } svg.chart .lbl { font-size: 12px; fill: var(--ink-2); }
+  .tree { list-style: none; margin: 0; padding: 0; }
+  .tree li { margin: 6px 0 6px 0; }
+  .tree ul { list-style: none; margin: 4px 0 0 22px; padding-left: 12px; border-left: 2px solid var(--line); }
+  .node { display: grid; grid-template-columns: minmax(160px, 1.4fr) 110px 60px minmax(90px, 1fr); align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; }
+  .node:hover { background: var(--surface-2); }
+  .node .name { font-weight: 600; } .node .name small { color: var(--ink-3); font-weight: 400; margin-left: 6px; }
+  .node .num { font-variant-numeric: tabular-nums; text-align: right; font-weight: 600; }
+  .node .share { color: var(--ink-3); font-size: 12px; text-align: right; }
+  .bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; } .bar i { display: block; height: 100%; }
+  .bar i.adv { background: var(--adv); } .bar i.fav { background: var(--fav); }
+  .sub { grid-column: 1 / -1; font-size: 12px; color: var(--ink-2); padding: 0 0 2px 2px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); font-size: 11px; border: 1px solid var(--line); }
+  .pill.rec { border-color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  details { border-top: 1px solid var(--line); padding: 8px 0; } details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  summary .id { font-family: var(--mono); font-weight: 700; color: var(--chip-ink); background: var(--chip); padding: 1px 7px; border-radius: 6px; font-size: 12px; }
+  summary .kind { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+  .desc { color: var(--ink-2); font-size: 13px; margin: 6px 0 8px; }
+  .tablewrap { overflow-x: auto; }
+  pre { background: var(--surface-2); padding: 10px 12px; border-radius: 8px; font-family: var(--mono); font-size: 12px; overflow-x: auto; }
+  .kv { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); }
+  .kv b { color: var(--ink); }
+  footer { margin-top: 24px; color: var(--ink-3); font-size: 12px; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .warnbox { background: color-mix(in srgb, var(--warn) 14%, var(--surface)); border: 1px solid var(--warn); border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 12px; }
+  @media print { .wrap { padding: 0; } section.card { break-inside: avoid; border-color: #ccc; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <div class="eyebrow">Variance Detective · investigation INV-2026-03-111d26</div>
+    <h1>Gross Margin — 2026-03 — Actual vs Forecast</h1>
+    <div class="meta">
+      <span>source <code>demo</code></span>
+      <span>Actual vs Forecast</span>
+      <span>2026-10-12T22:28:40+00:00</span>
+      <span>narrator: template</span>
+    </div>
+  </div>
+  <div>
+    
+      <span class="badge ok">✓ 11/11 claims verified against evidence</span>
+    
+  </div>
+</header>
+
+<section class="card">
+  <div class="hero">
+    <div class="tile"><div class="k">Gross Margin · Actual</div><div class="n">£10.4M</div><div class="s">2026-03</div></div>
+    <div class="tile"><div class="k">Forecast</div><div class="n">£10.7M</div><div class="s">comparison</div></div>
+    <div class="tile"><div class="k">Variance</div><div class="n adv">-£343k</div><div class="s">-3.2% vs Forecast</div></div>
+    
+    <div class="tile"><div class="k">Rate effect</div><div class="n adv">-£351k</div><div class="s">41.0% vs 42.4% (-1.4pts)</div></div>
+    <div class="tile"><div class="k">Volume effect</div><div class="n fav">+£7.6k</div><div class="s">via net_sales</div></div>
+    
+  </div>
+</section>
+
+<section class="card">
+  <p class="headline">Gross Margin -£343k vs Forecast in 2026-03 — concentrated in South › Store › Womenswear › S03</p>
+  <p class="summary">Gross Margin for 2026-03 was £10.4M against £10.7M Forecast, -£343k (-3.2%) — below plan. Of that, -£351k is a rate effect (rate 41.0% vs 42.4%, -1.4pts) and +£7.6k is a volume effect (net_sales £25.4M vs £25.3M). South › Store › Womenswear › S03: -£136k is driven by rate erosion (-£128k, -30.7pts) rather than volume (-£7.8k).</p>
+  <div class="two">
+    <div>
+      <h2>Key findings</h2>
+      <ul class="claims">
+      
+        <li><span class="tick-ok">✓</span>
+          <div>Gross Margin for 2026-03 was £10.4M against £10.7M Forecast, -£343k (-3.2%) — below plan.
+            <div class="chips"><a class="chip" href="#E2">E2</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>Of that, -£351k is a rate effect (rate 41.0% vs 42.4%, -1.4pts) and +£7.6k is a volume effect (net_sales £25.4M vs £25.3M).
+            <div class="chips"><a class="chip" href="#E3">E3</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>By region, 1 of 4 members explain 92% of the variance: South -£316k (92.1% of total).
+            <div class="chips"><a class="chip" href="#E5">E5</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>Within South, channel concentrates it: Store -£352k (111% of the -£316k).
+            <div class="chips"><a class="chip" href="#E8">E8</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>Within South › Store, category concentrates it: Womenswear -£358k (102% of the -£352k).
+            <div class="chips"><a class="chip" href="#E12">E12</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>Within South › Store › Womenswear, store concentrates it: S03 -£136k; S07 -£131k; S11 -£102k (103% of the -£358k).
+            <div class="chips"><a class="chip" href="#E15">E15</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>Partly masked at South by favourable movements: Online +£36k.
+            <div class="chips"><a class="chip" href="#E9">E9</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>On net_sales, price contributed +£40k, volume -£13k and category mix -£9.6k (total +£18k).
+            <div class="chips"><a class="chip" href="#E4">E4</a></div>
+            
+          </div></li>
+      
+      </ul>
+    </div>
+    <div>
+      <h2>Root causes</h2>
+      <ul class="claims">
+      
+        <li><span class="tick-ok">✓</span>
+          <div>South › Store › Womenswear › S03: -£136k is driven by rate erosion (-£128k, -30.7pts) rather than volume (-£7.8k).
+            <div class="chips"><a class="chip" href="#E16">E16</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>South › Store › Womenswear › S07: -£131k is driven by rate erosion (-£119k, -36.2pts) rather than volume (-£12k). This node also appeared in 1 prior investigation(s) (2026-02). Last explanation: “Store › Womenswear › South › S07: -£75k is driven by rate erosion (-£71k, -23.2pts) rather than volume (-£4.4k).” — a recurring pattern should not be treated as one-off.
+            <div class="chips"><a class="chip" href="#E18">E18</a><a class="chip" href="#E24">E24</a></div>
+            
+          </div></li>
+      
+        <li><span class="tick-ok">✓</span>
+          <div>South › Store › Womenswear › S11: -£102k is driven by rate erosion (-£97k, -31.7pts) rather than volume (-£4.8k).
+            <div class="chips"><a class="chip" href="#E20">E20</a></div>
+            
+          </div></li>
+      
+      </ul>
+      
+      <h2 style="margin-top:16px">Recommended actions</h2>
+      <ol class="actions"><li>Confirm the driver behind South › Store › Womenswear › S03 with the budget owner before the next forecast cycle.</li><li>Re-baseline the Forecast rate for South › Store › Womenswear › S07: the same intersection has driven the variance in 2 periods.</li><li>Confirm the driver behind South › Store › Womenswear › S11 with the budget owner before the next forecast cycle.</li><li>Separate favourable offsets from the underlying adverse trend in the commentary — the net figure understates the problem.</li></ol>
+      
+      
+      <h2 style="margin-top:16px">Open questions</h2>
+      <ol class="actions"><li>Is the movement in South › Store › Womenswear › S03 operational (pricing/markdown/volume) or an accounting timing effect?</li></ol>
+      
+      <div class="kv" style="margin-top:12px"><span>confidence <b>medium</b></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Variance walk — Forecast to Actual</h2>
+  <svg class="chart" viewBox="0 0 860 320" role="img" aria-label="Variance waterfall">
+<line x1="70" x2="840" y1="250.0" y2="250.0" stroke="var(--grid)" stroke-width="1"/>
+<text x="62" y="254.0" text-anchor="end" class="tick">£10.3M</text>
+<line x1="70" x2="840" y1="194.5" y2="194.5" stroke="var(--grid)" stroke-width="1"/>
+<text x="62" y="198.5" text-anchor="end" class="tick">£10.4M</text>
+<line x1="70" x2="840" y1="139.0" y2="139.0" stroke="var(--grid)" stroke-width="1"/>
+<text x="62" y="143.0" text-anchor="end" class="tick">£10.5M</text>
+<line x1="70" x2="840" y1="83.5" y2="83.5" stroke="var(--grid)" stroke-width="1"/>
+<text x="62" y="87.5" text-anchor="end" class="tick">£10.6M</text>
+<line x1="70" x2="840" y1="28.0" y2="28.0" stroke="var(--grid)" stroke-width="1"/>
+<text x="62" y="32.0" text-anchor="end" class="tick">£10.7M</text>
+<line x1="70" x2="840" y1="250.0" y2="250.0" stroke="var(--ink-2)" stroke-width="1"/>
+<text x="840" y="16" text-anchor="end" class="tick">axis zoomed to the walk · starts at £10.3M</text>
+<rect x="134.2" y="28.0" width="64.0" height="222.0" rx="3" fill="var(--neu)"><title>Forecast: £10.7M</title></rect>
+<text x="166.2" y="22.0" text-anchor="middle" class="val">£10.7M</text>
+<text x="166.2" y="268.0" text-anchor="middle" class="tick">Forecast</text>
+<rect x="326.8" y="28.0" width="64.0" height="151.4" rx="3" fill="var(--adv)"><title>South: -£316k</title></rect>
+<line x1="262.5" x2="326.8" y1="28.0" y2="28.0" stroke="var(--ink-2)" stroke-dasharray="3 3" stroke-width="1"/>
+<text x="358.8" y="22.0" text-anchor="middle" class="val">-£316k</text>
+<text x="358.8" y="268.0" text-anchor="middle" class="tick">South</text>
+<rect x="519.2" y="179.4" width="64.0" height="13.0" rx="3" fill="var(--adv)"><title>Other: -£27k</title></rect>
+<line x1="455.0" x2="519.2" y1="179.4" y2="179.4" stroke="var(--ink-2)" stroke-dasharray="3 3" stroke-width="1"/>
+<text x="551.2" y="173.4" text-anchor="middle" class="val">-£27k</text>
+<text x="551.2" y="268.0" text-anchor="middle" class="tick">Other</text>
+<rect x="711.8" y="192.4" width="64.0" height="57.6" rx="3" fill="var(--neu)"><title>Actual: £10.4M</title></rect>
+<text x="743.8" y="186.4" text-anchor="middle" class="val">£10.4M</text>
+<text x="743.8" y="268.0" text-anchor="middle" class="tick">Actual</text>
+</svg>
+  <div class="two" style="margin-top:14px">
+    <div><h2>Rate vs volume</h2><svg class="chart" viewBox="0 0 480 78" role="img" aria-label="Contributions">
+<line x1="311.0" x2="311.0" y1="4" y2="74" stroke="var(--ink-2)" stroke-width="1"/>
+<text x="162" y="26.0" text-anchor="end" class="lbl">Rate effect (-1.4pts)</text>
+<rect x="178.0" y="12" width="133.0" height="20" rx="3" fill="var(--adv)"><title>Rate effect (-1.4pts): -£351k</title></rect>
+<text x="317.0" y="26.0" text-anchor="start" class="val">-£351k</text>
+<text x="162" y="60.0" text-anchor="end" class="lbl">Volume effect (net_sales)</text>
+<rect x="311.0" y="46" width="2.9" height="20" rx="3" fill="var(--fav)"><title>Volume effect (net_sales): +£7.6k</title></rect>
+<text x="305.0" y="60.0" text-anchor="end" class="val">+£7.6k</text>
+</svg></div>
+    <div><h2>Price / volume / mix on net_sales</h2><svg class="chart" viewBox="0 0 480 112" role="img" aria-label="Contributions">
+<line x1="311.0" x2="311.0" y1="4" y2="108" stroke="var(--ink-2)" stroke-width="1"/>
+<text x="162" y="26.0" text-anchor="end" class="lbl">Price</text>
+<rect x="311.0" y="12" width="133.0" height="20" rx="3" fill="var(--fav)"><title>Price: +£40k</title></rect>
+<text x="305.0" y="26.0" text-anchor="end" class="val">+£40k</text>
+<text x="162" y="60.0" text-anchor="end" class="lbl">Volume</text>
+<rect x="269.1" y="46" width="41.9" height="20" rx="3" fill="var(--adv)"><title>Volume: -£13k</title></rect>
+<text x="317.0" y="60.0" text-anchor="start" class="val">-£13k</text>
+<text x="162" y="94.0" text-anchor="end" class="lbl">Mix (category)</text>
+<rect x="279.2" y="80" width="31.8" height="20" rx="3" fill="var(--adv)"><title>Mix (category): -£9.6k</title></rect>
+<text x="317.0" y="94.0" text-anchor="start" class="val">-£9.6k</text>
+</svg></div>
+  </div>
+  <h2 style="margin-top:14px">Where it lands — deepest nodes</h2><svg class="chart" viewBox="0 0 860 100" role="img" aria-label="Contributions">
+<line x1="519.0" x2="519.0" y1="4" y2="96" stroke="var(--ink-2)" stroke-width="1"/>
+<text x="299" y="24.0" text-anchor="end" class="lbl">South › Store › Womenswear › S03</text>
+<rect x="315.0" y="12" width="204.0" height="16" rx="3" fill="var(--adv)"><title>South › Store › Womenswear › S03: -£136k</title></rect>
+<text x="525.0" y="24.0" text-anchor="start" class="val">-£136k</text>
+<text x="299" y="54.0" text-anchor="end" class="lbl">South › Store › Womenswear › S07</text>
+<rect x="322.4" y="42" width="196.6" height="16" rx="3" fill="var(--adv)"><title>South › Store › Womenswear › S07: -£131k</title></rect>
+<text x="525.0" y="54.0" text-anchor="start" class="val">-£131k</text>
+<text x="856" y="54.0" text-anchor="end" class="tick">×2 periods</text>
+<text x="299" y="84.0" text-anchor="end" class="lbl">South › Store › Womenswear › S11</text>
+<rect x="366.8" y="72" width="152.2" height="16" rx="3" fill="var(--adv)"><title>South › Store › Womenswear › S11: -£102k</title></rect>
+<text x="525.0" y="84.0" text-anchor="start" class="val">-£102k</text>
+</svg>
+</section>
+
+<section class="card">
+  <h2>Variance tree</h2>
+  
+  <ul class="tree">
+    <li>
+      <div class="node">
+        <div class="name">Total<small>↳ by region · 92.1% covered</small></div>
+        <div class="num adv">-£343k</div>
+        <div class="share">100.0%</div>
+        <div class="bar"><i class="adv" style="width: 100.0%"></i></div>
+        <div class="sub">
+          <span>£10.4M vs £10.7M (-3.2%)</span>
+          <span>rate -£351k (-1.4pts) · volume +£7.6k</span>
+          <span class="pill rec">recurring · seen in 2026-02</span>
+          
+          <span><a class="chip" href="#E2">E2</a> <a class="chip" href="#E3">E3</a> <a class="chip" href="#E4">E4</a> <a class="chip" href="#E5">E5</a> <a class="chip" href="#E22">E22</a> </span>
+        </div>
+      </div>
+      <ul>
+    <li>
+      <div class="node">
+        <div class="name">South<small>↳ by channel · 111.4% covered</small></div>
+        <div class="num adv">-£316k</div>
+        <div class="share">92.1%</div>
+        <div class="bar"><i class="adv" style="width: 92.1%"></i></div>
+        <div class="sub">
+          <span>£2.3M vs £2.6M (-12.1%)</span>
+          <span>rate -£321k (-5.2pts) · volume +£5.3k</span>
+          
+          <span class="pill">offset: Online +£36k</span>
+          <span><a class="chip" href="#E6">E6</a> <a class="chip" href="#E7">E7</a> <a class="chip" href="#E8">E8</a> <a class="chip" href="#E9">E9</a> </span>
+        </div>
+      </div>
+      <ul>
+    <li>
+      <div class="node">
+        <div class="name">Store<small>↳ by category · 101.6% covered</small></div>
+        <div class="num adv">-£352k</div>
+        <div class="share">102.6%</div>
+        <div class="bar"><i class="adv" style="width: 102.6%"></i></div>
+        <div class="sub">
+          <span>£1.4M vs £1.8M (-19.9%)</span>
+          <span>rate -£337k (-8.1pts) · volume -£15k</span>
+          
+          
+          <span><a class="chip" href="#E10">E10</a> <a class="chip" href="#E11">E11</a> <a class="chip" href="#E12">E12</a> </span>
+        </div>
+      </div>
+      <ul>
+    <li>
+      <div class="node">
+        <div class="name">Womenswear<small>↳ by store · 103.1% covered</small></div>
+        <div class="num adv">-£358k</div>
+        <div class="share">104.3%</div>
+        <div class="bar"><i class="adv" style="width: 104.3%"></i></div>
+        <div class="sub">
+          <span>£267k vs £624k (-57.3%)</span>
+          <span>rate -£338k (-24.6pts) · volume -£20k</span>
+          <span class="pill rec">recurring · seen in 2026-02</span>
+          
+          <span><a class="chip" href="#E13">E13</a> <a class="chip" href="#E14">E14</a> <a class="chip" href="#E15">E15</a> <a class="chip" href="#E23">E23</a> </span>
+        </div>
+      </div>
+      <ul>
+    <li>
+      <div class="node">
+        <div class="name">S03</div>
+        <div class="num adv">-£136k</div>
+        <div class="share">39.7%</div>
+        <div class="bar"><i class="adv" style="width: 39.7%"></i></div>
+        <div class="sub">
+          <span>£56k vs £192k (-70.9%)</span>
+          <span>rate -£128k (-30.7pts) · volume -£7.8k</span>
+          
+          
+          <span><a class="chip" href="#E16">E16</a> <a class="chip" href="#E17">E17</a> </span>
+        </div>
+      </div>
+      
+    </li>
+  
+    <li>
+      <div class="node">
+        <div class="name">S07</div>
+        <div class="num adv">-£131k</div>
+        <div class="share">38.2%</div>
+        <div class="bar"><i class="adv" style="width: 38.2%"></i></div>
+        <div class="sub">
+          <span>£26k vs £157k (-83.7%)</span>
+          <span>rate -£119k (-36.2pts) · volume -£12k</span>
+          <span class="pill rec">recurring · seen in 2026-02</span>
+          
+          <span><a class="chip" href="#E18">E18</a> <a class="chip" href="#E19">E19</a> <a class="chip" href="#E24">E24</a> </span>
+        </div>
+      </div>
+      
+    </li>
+  
+    <li>
+      <div class="node">
+        <div class="name">S11</div>
+        <div class="num adv">-£102k</div>
+        <div class="share">29.6%</div>
+        <div class="bar"><i class="adv" style="width: 29.6%"></i></div>
+        <div class="sub">
+          <span>£38k vs £139k (-73.0%)</span>
+          <span>rate -£97k (-31.7pts) · volume -£4.8k</span>
+          
+          
+          <span><a class="chip" href="#E20">E20</a> <a class="chip" href="#E21">E21</a> </span>
+        </div>
+      </div>
+      
+    </li>
+  </ul>
+    </li>
+  </ul>
+    </li>
+  </ul>
+    </li>
+  </ul>
+    </li>
+  </ul>
+</section>
+
+
+<section class="card">
+  <h2>Memory — what we found before</h2>
+  <table><thead><tr><th>Node</th><th class="num">Prior periods</th><th>Last explanation</th><th>Evidence</th></tr></thead><tbody>
+  <tr><td>Total</td><td class="num">1 · 2026-02</td><td>Gross Margin -£87k vs Forecast in 2026-02 — concentrated in Store › Womenswear › South › S07</td><td><a class="chip" href="#E22">E22</a></td></tr><tr><td>South › Store › Womenswear</td><td class="num">1 · 2026-02</td><td>—</td><td><a class="chip" href="#E23">E23</a></td></tr><tr><td>South › Store › Womenswear › S07</td><td class="num">1 · 2026-02</td><td>Store › Womenswear › South › S07: -£75k is driven by rate erosion (-£71k, -23.2pts) rather than volume (-£4.4k).</td><td><a class="chip" href="#E24">E24</a></td></tr>
+  </tbody></table>
+</section>
+
+
+
+<section class="card">
+  <h2>Plan PR — proposed forecast adjustment <span class="pill">PR-2026-03-6523eb</span> <span class="pill">draft</span></h2>
+  <p class="summary">Draft change to version <b>Forecast</b>. Nothing is written to the planning system until a reviewer approves and applies it.</p>
+  <div class="tablewrap"><table><thead><tr><th>Intersection</th><th>Measure</th><th class="num">Current</th><th class="num">Proposed</th><th class="num">Δ</th><th>Rationale</th><th>Evidence</th></tr></thead><tbody>
+  
+    <tr><td>South › Store › Womenswear › S07</td><td><code>cogs</code></td><td class="num">£200k</td><td class="num">£319k</td><td class="num">+£119k</td><td>Align Forecast with the observed rate at South › Store › Womenswear › S07 (-36.2pts), recurring across 2 periods.</td><td><a class="chip" href="#E18">E18</a> <a class="chip" href="#E24">E24</a> </td></tr>
+  
+  </tbody></table></div>
+  <pre>vd pr approve PR-2026-03-6523eb --by "your.name"      # record approval
+vd pr apply   PR-2026-03-6523eb                      # push to the source's draft version</pre>
+</section>
+
+
+<section class="card">
+  <h2>Evidence ledger — 24 items</h2>
+  
+  <details id="E1">
+    <summary><span class="id">E1</span><span class="kind">query</span><span>Fact query — demo</span><span class="kind">· demo</span></summary>
+    <div class="desc">SELECT cogs, net_sales, units BY region, category, store, channel, version WHERE time in ['2026-03'], version in ['Actual', 'Forecast']</div>
+    <div class="kv"><span>rows_returned <b>320</b></span><span>elapsed_ms <b>9</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">region</th><th class="">category</th><th class="">store</th><th class="">channel</th><th class="">version</th><th class="num">cogs</th><th class="num">net_sales</th><th class="num">units</th></tr></thead><tbody>
+    <tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S04</td><td class="">Online</td><td class="">Actual</td><td class="num">34351.14</td><td class="num">64931.73</td><td class="num">3337</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S04</td><td class="">Online</td><td class="">Forecast</td><td class="num">32414.71</td><td class="num">61159.82</td><td class="num">3398</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S04</td><td class="">Store</td><td class="">Actual</td><td class="num">69952.96</td><td class="num">133395.89</td><td class="num">7574</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S04</td><td class="">Store</td><td class="">Forecast</td><td class="num">68881.25</td><td class="num">129964.62</td><td class="num">7220</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S06</td><td class="">Online</td><td class="">Actual</td><td class="num">49464.81</td><td class="num">99999.32</td><td class="num">4993</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S06</td><td class="">Online</td><td class="">Forecast</td><td class="num">46709.94</td><td class="num">88131.95</td><td class="num">4896</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S06</td><td class="">Store</td><td class="">Actual</td><td class="num">99993.62</td><td class="num">187933.15</td><td class="num">10478</td></tr><tr><td class="">Midlands</td><td class="">Beauty</td><td class="">S06</td><td class="">Store</td><td class="">Forecast</td><td class="num">99258.61</td><td class="num">187280.4</td><td class="num">10404</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E2">
+    <summary><span class="id">E2</span><span class="kind">headline</span><span>Gross Margin: Actual vs Forecast</span><span class="kind">· demo</span></summary>
+    <div class="desc">Total Gross Margin computed from cogs, net_sales, units using formula 'net_sales - cogs'.</div>
+    <div class="kv"><span>actual <b>10403714.37</b></span><span>comparison <b>10746794.28</b></span><span>variance <b>-343079.91000000015</b></span><span>variance_pct <b>-0.03192393015640755</b></span><span>cogs_Actual <b>14948466.459999999</b></span><span>net_sales_Actual <b>25352180.83</b></span><span>units_Actual <b>1166608.0</b></span><span>cogs_Forecast <b>14587468.72</b></span><span>net_sales_Forecast <b>25334263.0</b></span><span>units_Forecast <b>1167191.0</b></span></div>
+    
+  </details>
+  
+  <details id="E3">
+    <summary><span class="id">E3</span><span class="kind">rate_volume</span><span>Rate vs volume split — Total</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>25352180.83</b></span><span>driver_comparison <b>25334263.0</b></span><span>rate_actual <b>0.4103676302943126</b></span><span>rate_comparison <b>0.42419999666064884</b></span><span>rate_delta_pts <b>-0.013832366366336224</b></span><span>volume_effect <b>7600.743426165315</b></span><span>rate_effect <b>-350680.6534261659</b></span><span>total <b>-343079.9100000006</b></span></div>
+    
+  </details>
+  
+  <details id="E4">
+    <summary><span class="id">E4</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — Total</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>40167.49122667911</b></span><span>volume_effect <b>-12654.205977427859</b></span><span>mix_effect <b>-9595.455249251798</b></span><span>total <b>17917.829999998212</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Kids</td><td class="num">3056054.37</td><td class="num">3040111.57</td><td class="num">216888.0</td><td class="num">217152.0</td><td class="num">14.0905</td><td class="num">13.9999</td><td class="num">19638.78</td><td class="num">-1671209.5</td></tr><tr><td class="">Home</td><td class="num">4513960.96</td><td class="num">4560167.34</td><td class="num">146307.0</td><td class="num">147098.0</td><td class="num">30.8527</td><td class="num">31.0009</td><td class="num">-21684.68</td><td class="num">1360004.28</td></tr><tr><td class="">Menswear</td><td class="num">5583402.72</td><td class="num">5573537.86</td><td class="num">213960.0</td><td class="num">214366.0</td><td class="num">26.0955</td><td class="num">26.0001</td><td class="num">20420.9</td><td class="num">918909.93</td></tr><tr><td class="">Beauty</td><td class="num">3670816.5</td><td class="num">3546796.81</td><td class="num">197741.0</td><td class="num">197043.0</td><td class="num">18.5638</td><td class="num">18.0001</td><td class="num">111455.61</td><td class="num">-732672.29</td></tr><tr><td class="">Womenswear</td><td class="num">8527946.28</td><td class="num">8613649.42</td><td class="num">391712.0</td><td class="num">391532.0</td><td class="num">21.771</td><td class="num">21.9999</td><td class="num">-89663.11</td><td class="num">115372.12</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E5">
+    <summary><span class="id">E5</span><span class="kind">pivot</span><span>Gross Margin by region — Total</span><span class="kind">· demo</span></summary>
+    <div class="desc">Contribution of each region member to the Total variance of -343,080. Dimension chosen because it needs the fewest members to explain 80% (candidates scored: region=1, channel=1, category=1, store=3).</div>
+    <div class="kv"><span>parent_variance <b>-343079.91000000015</b></span><span>coverage_target <b>0.8</b></span><span>members_total <b>4</b></span><span>members_selected <b>1</b></span><span>coverage_achieved <b>0.9209</b></span><span>selected_variance <b>-315939.9599999995</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">region</th><th class="num">actual</th><th class="num">comparison</th><th class="num">variance</th><th class="num">share_of_parent</th><th class="num">share_of_root</th><th class="num">pct_change</th></tr></thead><tbody>
+    <tr><td class="">South</td><td class="num">2288132.87</td><td class="num">2604072.83</td><td class="num">-315939.96</td><td class="num">0.9209</td><td class="num">0.9209</td><td class="num">-0.1213</td></tr><tr><td class="">Midlands</td><td class="num">2636446.42</td><td class="num">2672555.04</td><td class="num">-36108.62</td><td class="num">0.1052</td><td class="num">0.1052</td><td class="num">-0.0135</td></tr><tr><td class="">Scotland</td><td class="num">2570865.56</td><td class="num">2564666.98</td><td class="num">6198.58</td><td class="num">-0.0181</td><td class="num">-0.0181</td><td class="num">0.0024</td></tr><tr><td class="">North</td><td class="num">2908269.52</td><td class="num">2905499.43</td><td class="num">2770.09</td><td class="num">-0.0081</td><td class="num">-0.0081</td><td class="num">0.001</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E6">
+    <summary><span class="id">E6</span><span class="kind">rate_volume</span><span>Rate vs volume split — South</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>6151247.82</b></span><span>driver_comparison <b>6138785.55</b></span><span>rate_actual <b>0.3719786516420989</b></span><span>rate_comparison <b>0.4241999999495014</b></span><span>rate_delta_pts <b>-0.05222134830740249</b></span><span>volume_effect <b>5286.494933370878</b></span><span>rate_effect <b>-321226.4549333703</b></span><span>total <b>-315939.95999999944</b></span></div>
+    
+  </details>
+  
+  <details id="E7">
+    <summary><span class="id">E7</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — South</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>-24853.206116442525</b></span><span>volume_effect <b>38895.52166377327</b></span><span>mix_effect <b>-1580.0455473316833</b></span><span>total <b>12462.269999999553</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Kids</td><td class="num">742087.64</td><td class="num">736654.28</td><td class="num">52805.0</td><td class="num">52620.0</td><td class="num">14.0534</td><td class="num">13.9995</td><td class="num">2843.45</td><td class="num">-406893.1</td></tr><tr><td class="">Home</td><td class="num">1092997.39</td><td class="num">1104981.4</td><td class="num">35440.0</td><td class="num">35644.0</td><td class="num">30.8408</td><td class="num">31.0005</td><td class="num">-5659.91</td><td class="num">329428.9</td></tr><tr><td class="">Menswear</td><td class="num">1363261.41</td><td class="num">1350532.82</td><td class="num">52389.0</td><td class="num">51944.0</td><td class="num">26.0219</td><td class="num">25.9998</td><td class="num">1158.69</td><td class="num">224994.75</td></tr><tr><td class="">Beauty</td><td class="num">902875.72</td><td class="num">859429.98</td><td class="num">47889.0</td><td class="num">47746.0</td><td class="num">18.8535</td><td class="num">18.0</td><td class="num">40871.73</td><td class="num">-177431.08</td></tr><tr><td class="">Womenswear</td><td class="num">2050025.66</td><td class="num">2087187.07</td><td class="num">96096.0</td><td class="num">94873.0</td><td class="num">21.3331</td><td class="num">21.9998</td><td class="num">-64067.17</td><td class="num">28320.48</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E8">
+    <summary><span class="id">E8</span><span class="kind">pivot</span><span>Gross Margin by channel — South</span><span class="kind">· demo</span></summary>
+    <div class="desc">Contribution of each channel member to the South variance of -315,940. Dimension chosen because it needs the fewest members to explain 80% (candidates scored: channel=1, category=1, store=3).</div>
+    <div class="kv"><span>parent_variance <b>-315939.9599999995</b></span><span>coverage_target <b>0.8</b></span><span>members_total <b>2</b></span><span>members_selected <b>1</b></span><span>coverage_achieved <b>1.114</b></span><span>selected_variance <b>-351960.5700000003</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">channel</th><th class="num">actual</th><th class="num">comparison</th><th class="num">variance</th><th class="num">share_of_parent</th><th class="num">share_of_root</th><th class="num">pct_change</th></tr></thead><tbody>
+    <tr><td class="">Store</td><td class="num">1418808.95</td><td class="num">1770769.52</td><td class="num">-351960.57</td><td class="num">1.114</td><td class="num">1.0259</td><td class="num">-0.1988</td></tr><tr><td class="">Online</td><td class="num">869323.92</td><td class="num">833303.31</td><td class="num">36020.61</td><td class="num">-0.114</td><td class="num">-0.105</td><td class="num">0.0432</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E9">
+    <summary><span class="id">E9</span><span class="kind">offsets</span><span>Offsetting channel members — South</span><span class="kind">· demo</span></summary>
+    <div class="desc">Members moving against the South variance (≥10% of it). They mask part of the adverse movement.</div>
+    
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">channel</th><th class="num">variance</th><th class="num">share_of_parent</th></tr></thead><tbody>
+    <tr><td class="">Online</td><td class="num">36020.61</td><td class="num">-0.114</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E10">
+    <summary><span class="id">E10</span><span class="kind">rate_volume</span><span>Rate vs volume split — South › Store</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>4140003.11</b></span><span>driver_comparison <b>4174374.17</b></span><span>rate_actual <b>0.3427072184010992</b></span><span>rate_comparison <b>0.4241999993019313</b></span><span>rate_delta_pts <b>-0.08149278090083212</b></span><span>volume_effect <b>-14580.203628006662</b></span><span>rate_effect <b>-337380.36637199356</b></span><span>total <b>-351960.57000000024</b></span></div>
+    
+  </details>
+  
+  <details id="E11">
+    <summary><span class="id">E11</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — South › Store</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>-59660.7709909844</b></span><span>volume_effect <b>27326.75970523393</b></span><span>mix_effect <b>-2037.0487142495112</b></span><span>total <b>-34371.05999999959</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Kids</td><td class="num">504830.48</td><td class="num">500924.91</td><td class="num">35884.0</td><td class="num">35781.0</td><td class="num">14.0684</td><td class="num">13.9997</td><td class="num">2463.6</td><td class="num">-276500.03</td></tr><tr><td class="">Home</td><td class="num">743276.07</td><td class="num">751387.35</td><td class="num">23922.0</td><td class="num">24238.0</td><td class="num">31.0708</td><td class="num">31.0004</td><td class="num">1684.84</td><td class="num">222361.09</td></tr><tr><td class="">Menswear</td><td class="num">929107.88</td><td class="num">918362.32</td><td class="num">35751.0</td><td class="num">35322.0</td><td class="num">25.9883</td><td class="num">25.9997</td><td class="num">-408.32</td><td class="num">153536.07</td></tr><tr><td class="">Beauty</td><td class="num">589169.06</td><td class="num">584412.38</td><td class="num">32582.0</td><td class="num">32468.0</td><td class="num">18.0827</td><td class="num">17.9996</td><td class="num">2704.72</td><td class="num">-120732.23</td></tr><tr><td class="">Womenswear</td><td class="num">1373619.62</td><td class="num">1419287.21</td><td class="num">65442.0</td><td class="num">64513.0</td><td class="num">20.9899</td><td class="num">22.0</td><td class="num">-66105.61</td><td class="num">19298.06</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E12">
+    <summary><span class="id">E12</span><span class="kind">pivot</span><span>Gross Margin by category — South › Store</span><span class="kind">· demo</span></summary>
+    <div class="desc">Contribution of each category member to the South › Store variance of -351,961. Dimension chosen because it needs the fewest members to explain 80% (candidates scored: category=1, store=3).</div>
+    <div class="kv"><span>parent_variance <b>-351960.5700000003</b></span><span>coverage_target <b>0.8</b></span><span>members_total <b>5</b></span><span>members_selected <b>1</b></span><span>coverage_achieved <b>1.0164</b></span><span>selected_variance <b>-357747.20999999985</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">actual</th><th class="num">comparison</th><th class="num">variance</th><th class="num">share_of_parent</th><th class="num">share_of_root</th><th class="num">pct_change</th></tr></thead><tbody>
+    <tr><td class="">Womenswear</td><td class="num">266739.15</td><td class="num">624486.36</td><td class="num">-357747.21</td><td class="num">1.0164</td><td class="num">1.0428</td><td class="num">-0.5729</td></tr><tr><td class="">Home</td><td class="num">271258.32</td><td class="num">285527.19</td><td class="num">-14268.87</td><td class="num">0.0405</td><td class="num">0.0416</td><td class="num">-0.05</td></tr><tr><td class="">Menswear</td><td class="num">396014.36</td><td class="num">385712.17</td><td class="num">10302.19</td><td class="num">-0.0293</td><td class="num">-0.03</td><td class="num">0.0267</td></tr><tr><td class="">Beauty</td><td class="num">279607.9</td><td class="num">274673.83</td><td class="num">4934.07</td><td class="num">-0.014</td><td class="num">-0.0144</td><td class="num">0.018</td></tr><tr><td class="">Kids</td><td class="num">205189.22</td><td class="num">200369.97</td><td class="num">4819.25</td><td class="num">-0.0137</td><td class="num">-0.014</td><td class="num">0.0241</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E13">
+    <summary><span class="id">E13</span><span class="kind">rate_volume</span><span>Rate vs volume split — South › Store › Womenswear</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>1373619.62</b></span><span>driver_comparison <b>1419287.21</b></span><span>rate_actual <b>0.19418705594784685</b></span><span>rate_comparison <b>0.4399999912632201</b></span><span>rate_delta_pts <b>-0.24581293531537324</b></span><span>volume_effect <b>-20093.739201012253</b></span><span>rate_effect <b>-337653.4707989876</b></span><span>total <b>-357747.20999999985</b></span></div>
+    
+  </details>
+  
+  <details id="E14">
+    <summary><span class="id">E14</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — South › Store › Womenswear</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>-66105.60742423982</b></span><span>volume_effect <b>20438.017424240075</b></span><span>mix_effect <b>0.0</b></span><span>total <b>-45667.58999999985</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Womenswear</td><td class="num">1373619.62</td><td class="num">1419287.21</td><td class="num">65442.0</td><td class="num">64513.0</td><td class="num">20.9899</td><td class="num">22.0</td><td class="num">-66105.61</td><td class="num">0.0</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E15">
+    <summary><span class="id">E15</span><span class="kind">pivot</span><span>Gross Margin by store — South › Store › Womenswear</span><span class="kind">· demo</span></summary>
+    <div class="desc">Contribution of each store member to the South › Store › Womenswear variance of -357,747. Dimension chosen because it needs the fewest members to explain 80% (candidates scored: store=3).</div>
+    <div class="kv"><span>parent_variance <b>-357747.20999999985</b></span><span>coverage_target <b>0.8</b></span><span>members_total <b>4</b></span><span>members_selected <b>3</b></span><span>coverage_achieved <b>1.0313</b></span><span>selected_variance <b>-368935.9800000001</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">store</th><th class="num">actual</th><th class="num">comparison</th><th class="num">variance</th><th class="num">share_of_parent</th><th class="num">share_of_root</th><th class="num">pct_change</th></tr></thead><tbody>
+    <tr><td class="">S03</td><td class="num">55797.38</td><td class="num">191952.89</td><td class="num">-136155.51</td><td class="num">0.3806</td><td class="num">0.3969</td><td class="num">-0.7093</td></tr><tr><td class="">S07</td><td class="num">25603.22</td><td class="num">156796.59</td><td class="num">-131193.37</td><td class="num">0.3667</td><td class="num">0.3824</td><td class="num">-0.8367</td></tr><tr><td class="">S11</td><td class="num">37595.52</td><td class="num">139182.62</td><td class="num">-101587.1</td><td class="num">0.284</td><td class="num">0.2961</td><td class="num">-0.7299</td></tr><tr><td class="">S15</td><td class="num">147743.03</td><td class="num">136554.26</td><td class="num">11188.77</td><td class="num">-0.0313</td><td class="num">-0.0326</td><td class="num">0.0819</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E16">
+    <summary><span class="id">E16</span><span class="kind">rate_volume</span><span>Rate vs volume split — South › Store › Womenswear › S03</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>418467.34</b></span><span>driver_comparison <b>436256.57</b></span><span>rate_actual <b>0.13333747861900047</b></span><span>rate_comparison <b>0.43999999816621677</b></span><span>rate_delta_pts <b>-0.3066625195472163</b></span><span>volume_effect <b>-7827.2611673784</b></span><span>rate_effect <b>-128328.24883262161</b></span><span>total <b>-136155.51</b></span></div>
+    
+  </details>
+  
+  <details id="E17">
+    <summary><span class="id">E17</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — South › Store › Womenswear › S03</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>-25885.166346949052</b></span><span>volume_effect <b>8095.936346949067</b></span><span>mix_effect <b>0.0</b></span><span>total <b>-17789.22999999998</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Womenswear</td><td class="num">418467.34</td><td class="num">436256.57</td><td class="num">20198.0</td><td class="num">19830.0</td><td class="num">20.7183</td><td class="num">21.9998</td><td class="num">-25885.17</td><td class="num">0.0</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E18">
+    <summary><span class="id">E18</span><span class="kind">rate_volume</span><span>Rate vs volume split — South › Store › Womenswear › S07</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>329630.79</b></span><span>driver_comparison <b>356355.89</b></span><span>rate_actual <b>0.07767241646327995</b></span><span>rate_comparison <b>0.43999999551010655</b></span><span>rate_delta_pts <b>-0.3623275790468266</b></span><span>volume_effect <b>-11759.043880007164</b></span><span>rate_effect <b>-119434.3261199929</b></span><span>total <b>-131193.37000000005</b></span></div>
+    
+  </details>
+  
+  <details id="E19">
+    <summary><span class="id">E19</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — South › Store › Womenswear › S07</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>-35591.09726324237</b></span><span>volume_effect <b>8865.997263242376</b></span><span>mix_effect <b>0.0</b></span><span>total <b>-26725.100000000035</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Womenswear</td><td class="num">329630.79</td><td class="num">356355.89</td><td class="num">16601.0</td><td class="num">16198.0</td><td class="num">19.8561</td><td class="num">22.0</td><td class="num">-35591.1</td><td class="num">0.0</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E20">
+    <summary><span class="id">E20</span><span class="kind">rate_volume</span><span>Rate vs volume split — South › Store › Womenswear › S11</span><span class="kind">· demo</span></summary>
+    <div class="desc">Gross Margin = net_sales × rate. Volume effect = Δnet_sales × comparison rate; rate effect = Δrate × actual net_sales.</div>
+    <div class="kv"><span>driver_name <b>net_sales</b></span><span>driver_actual <b>305391.94</b></span><span>driver_comparison <b>316324.15</b></span><span>rate_actual <b>0.12310580298877573</b></span><span>rate_comparison <b>0.43999998103211535</b></span><span>rate_delta_pts <b>-0.31689417804333964</b></span><span>volume_effect <b>-4810.172192639111</b></span><span>rate_effect <b>-96776.9278073609</b></span><span>total <b>-101587.1</b></span></div>
+    
+  </details>
+  
+  <details id="E21">
+    <summary><span class="id">E21</span><span class="kind">pvm</span><span>Price / volume / mix on net_sales — South › Store › Womenswear › S11</span><span class="kind">· demo</span></summary>
+    <div class="desc">Decomposition of Δnet_sales over category using units as volume.</div>
+    <div class="kv"><span>dimension <b>category</b></span><span>value_measure <b>net_sales</b></span><span>volume_measure <b>units</b></span><span>price_effect <b>-16652.35737793854</b></span><span>volume_effect <b>5720.147377938518</b></span><span>mix_effect <b>0.0</b></span><span>total <b>-10932.210000000021</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">category</th><th class="num">value_actual</th><th class="num">value_comparison</th><th class="num">volume_actual</th><th class="num">volume_comparison</th><th class="num">price_actual</th><th class="num">price_comparison</th><th class="num">price_effect</th><th class="num">mix_effect</th></tr></thead><tbody>
+    <tr><td class="">Womenswear</td><td class="num">305391.94</td><td class="num">316324.15</td><td class="num">14638.0</td><td class="num">14378.0</td><td class="num">20.863</td><td class="num">22.0006</td><td class="num">-16652.36</td><td class="num">0.0</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E22">
+    <summary><span class="id">E22</span><span class="kind">memory</span><span>Prior findings — Total</span></summary>
+    <div class="desc">The same Gross Margin node was flagged with the same sign in 1 earlier investigation(s).</div>
+    <div class="kv"><span>count <b>1</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">period</th><th class="num">variance</th><th class="">explanation</th></tr></thead><tbody>
+    <tr><td class="">2026-02</td><td class="num">-86757.47</td><td class="">Gross Margin -£87k vs Forecast in 2026-02 — concentrated in Store › Womenswear › South › S07</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E23">
+    <summary><span class="id">E23</span><span class="kind">memory</span><span>Prior findings — South › Store › Womenswear</span></summary>
+    <div class="desc">The same Gross Margin node was flagged with the same sign in 1 earlier investigation(s).</div>
+    <div class="kv"><span>count <b>1</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">period</th><th class="num">variance</th><th class="">explanation</th></tr></thead><tbody>
+    <tr><td class="">2026-02</td><td class="num">-74187.52</td><td class="">—</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+  <details id="E24">
+    <summary><span class="id">E24</span><span class="kind">memory</span><span>Prior findings — South › Store › Womenswear › S07</span></summary>
+    <div class="desc">The same Gross Margin node was flagged with the same sign in 1 earlier investigation(s).</div>
+    <div class="kv"><span>count <b>1</b></span></div>
+    
+    <div class="tablewrap" style="margin-top:8px"><table><thead><tr><th class="">period</th><th class="num">variance</th><th class="">explanation</th></tr></thead><tbody>
+    <tr><td class="">2026-02</td><td class="num">-74914.74</td><td class="">Store › Womenswear › South › S07: -£75k is driven by rate erosion (-£71k, -23.2pts) rather than volume (-£4.4k).</td></tr>
+    </tbody></table></div>
+    
+    
+  </details>
+  
+</section>
+
+
+
+<footer>
+  <span>Variance Detective v0.1.0</span>
+  <span>fetch 10 ms · analysis 91 ms · narrative 0 ms</span>
+  
+  <span>Every figure above is computed deterministically; the narrative only cites the evidence ledger.</span>
+</footer>
+</div>
+</body>
+</html>

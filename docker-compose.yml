@@ -1,0 +1,20 @@
+services:
+  api:
+    build: .
+    command: uvicorn variance_detective.api:app --host 0.0.0.0 --port 8080
+    env_file: .env
+    ports: ["8080:8080"]
+    volumes:
+      - ./workspace:/app/workspace
+      - ./config:/app/config:ro
+
+  # Monthly batch: run on the 3rd working day after close, e.g. from cron/Airflow instead.
+  batch:
+    build: .
+    profiles: ["batch"]
+    env_file: .env
+    command: >
+      vd investigate --kpi gross_margin --period ${PERIOD:-2026-03} --source ${SOURCE:-demo}
+    volumes:
+      - ./workspace:/app/workspace
+      - ./config:/app/config:ro

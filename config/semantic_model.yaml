@@ -1,0 +1,90 @@
+# The canonical finance semantic model.
+# Everything downstream (analysis, memory, prompts, reports) speaks ONLY these names.
+# Each source declares how its own columns/members map onto them (see `sources:` below).
+
+canonical:
+  dimensions: [time, version, entity, region, store, channel, category, product, customer, account, cost_center, currency]
+  measures: [net_sales, cogs, units, gross_margin, opex, headcount]
+
+kpis:
+  gross_margin:
+    label: Gross Margin
+    formula: "net_sales - cogs"
+    unit: currency
+    direction: higher_is_better
+    drill_dimensions: [region, category, store, channel]
+    rate_driver: net_sales          # GM = net_sales × margin rate  → rate vs volume split
+    value_measure: net_sales        # price / volume / mix on net_sales ...
+    volume_measure: units           # ... using units as volume
+    pvm_dimension: category         # ... with mix computed across categories
+
+  net_sales:
+    label: Net Sales
+    formula: "net_sales"
+    unit: currency
+    direction: higher_is_better
+    drill_dimensions: [region, channel, category, store]
+    value_measure: net_sales
+    volume_measure: units
+    pvm_dimension: category
+
+  cogs:
+    label: Cost of Goods Sold
+    formula: "cogs"
+    unit: currency
+    direction: lower_is_better
+    drill_dimensions: [region, category, store, channel]
+
+sources:
+  # ---- the demo CSV (and any file export with the same layout) ----
+  default:
+    dimensions:
+      time: period
+      version: version
+      region: region
+      store: store
+      channel: channel
+      category: category
+    measures:
+      net_sales: net_sales
+      cogs: cogs
+      units: units
+    members: {}
+
+  # ---- example: SAP Analytics Cloud planning model via SAC-MCP ----
+  # Column names are the SAC dimension IDs returned by read_fact_data; members are SAC member IDs.
+  sac_planning:
+    dimensions:
+      time: Date
+      version: Version
+      region: Region
+      store: Store
+      channel: Channel
+      category: ProductCategory
+    measures:
+      net_sales: NetSales
+      cogs: COGS
+      units: Units
+    members:
+      version:
+        Actual: public.Actual
+        Forecast: public.Forecast
+        Budget: public.Budget
+
+  # ---- example: Anaplan export (a module exported via its MCP / API) ----
+  anaplan_pl:
+    dimensions:
+      time: Time
+      version: Versions
+      region: Region
+      category: Category
+      store: Store
+      channel: Channel
+    measures:
+      net_sales: "Revenue"
+      cogs: "Cost of Sales"
+      units: "Volume"
+    members:
+      version:
+        Actual: Actual
+        Forecast: "Forecast v3"
