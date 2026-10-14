@@ -155,7 +155,7 @@ def load_config(config_path: str | Path | None = None) -> AppConfig:
     data: dict[str, Any] = {}
     base_dir = Path(".")
     if path.exists():
-        data = _expand_env(yaml.safe_load(path.read_text()) or {})
+        data = _expand_env(yaml.safe_load(path.read_text(encoding="utf-8")) or {})
         base_dir = path.resolve().parent.parent if path.parent.name == "config" else path.resolve().parent
     AppConfig._yaml_data = data
     try:
@@ -166,6 +166,6 @@ def load_config(config_path: str | Path | None = None) -> AppConfig:
     # sources may live in a separate file (keeps agent.yaml small)
     sources_path = cfg.resolve(cfg.sources_file)
     if sources_path.exists() and not cfg.sources:
-        raw = _expand_env(yaml.safe_load(sources_path.read_text()) or {})
+        raw = _expand_env(yaml.safe_load(sources_path.read_text(encoding="utf-8")) or {})
         cfg.sources = {k: SourceConfig(**v) for k, v in (raw.get("sources") or {}).items()}
     return cfg

@@ -38,9 +38,7 @@ def project(tmp_path, demo_facts_csv) -> Path:
     shutil.copy(ROOT / "config" / "semantic_model.yaml", tmp_path / "config" / "semantic_model.yaml")
     (tmp_path / "config" / "agent.yaml").write_text(
         "llm:\n  provider: offline\nanalysis:\n  max_depth: 4\nmemory:\n  path: workspace/memory.sqlite\n"
-        "writeback:\n  mode: draft\nreporting:\n  output_dir: workspace/reports\n"
-    )
+        "writeback:\n  mode: draft\nreporting:\n  output_dir: workspace/reports\n", encoding="utf-8")
     (tmp_path / "config" / "sources.yaml").write_text(
-        f"sources:\n  demo:\n    type: csv\n    semantics: default\n    path: {demo_facts_csv}\n"
-    )
+        f"sources:\n  demo:\n    type: csv\n    semantics: default\n    path: {demo_facts_csv}\n", encoding="utf-8")
     return tmp_path

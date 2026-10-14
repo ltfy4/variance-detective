@@ -31,9 +31,9 @@ def test_full_run_offline(project):
     # reports exist and are self-contained
     for fmt in ("html", "markdown", "json"):
         assert mar.report_paths[fmt].exists() and mar.report_paths[fmt].stat().st_size > 2000
-    html = mar.report_paths["html"].read_text()
+    html = mar.report_paths["html"].read_text(encoding="utf-8")
     assert "<script" not in html.lower() and mar.narrative.headline in html
-    data = json.loads(mar.report_paths["json"].read_text())
+    data = json.loads(mar.report_paths["json"].read_text(encoding="utf-8"))
     assert data["verification"]["ok"] and len(data["evidence"]) == len(mar.evidence)
 
 

@@ -92,7 +92,7 @@ class SemanticModel(BaseModel):
 
 
 def load_semantic_model(path: str | Path) -> SemanticModel:
-    raw = yaml.safe_load(Path(path).read_text())
+    raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     kpis = {k: KPIDefinition(name=k, **v) for k, v in (raw.get("kpis") or {}).items()}
     sources = {k: SourceSemantics(**v) for k, v in (raw.get("sources") or {}).items()}
     canonical = raw.get("canonical") or {}

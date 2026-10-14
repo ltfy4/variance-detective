@@ -22,18 +22,18 @@ def write_reports(result: InvestigationResult, cfg: AppConfig) -> dict[str, Path
     paths: dict[str, Path] = {}
     if "json" in cfg.reporting.formats:
         p = out_dir / f"{stem}.json"
-        p.write_text(json.dumps(result.to_dict(), indent=2, default=str))
+        p.write_text(json.dumps(result.to_dict(), indent=2, default=str), encoding="utf-8")
         paths["json"] = p
     if "markdown" in cfg.reporting.formats:
         from .markdown_report import render_markdown
 
         p = out_dir / f"{stem}.md"
-        p.write_text(render_markdown(result, cfg))
+        p.write_text(render_markdown(result, cfg), encoding="utf-8")
         paths["markdown"] = p
     if "html" in cfg.reporting.formats:
         from .html_report import render_html
 
         p = out_dir / f"{stem}.html"
-        p.write_text(render_html(result, cfg))
+        p.write_text(render_html(result, cfg), encoding="utf-8")
         paths["html"] = p
     return paths

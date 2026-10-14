@@ -108,17 +108,17 @@ class ProposalStore:
 
     def save(self, p: ChangeProposal) -> Path:
         path = self._path(p.id)
-        path.write_text(json.dumps(p.model_dump(), indent=2))
+        path.write_text(json.dumps(p.model_dump(), indent=2), encoding="utf-8")
         return path
 
     def load(self, id_: str) -> ChangeProposal:
         path = self._path(id_)
         if not path.exists():
             raise FileNotFoundError(f"No proposal {id_} in {self.dir}")
-        return ChangeProposal(**json.loads(path.read_text()))
+        return ChangeProposal(**json.loads(path.read_text(encoding="utf-8")))
 
     def list(self) -> list[ChangeProposal]:
-        return sorted((ChangeProposal(**json.loads(p.read_text())) for p in self.dir.glob("PR-*.json")), key=lambda p: p.created_at, reverse=True)
+        return sorted((ChangeProposal(**json.loads(p.read_text(encoding="utf-8"))) for p in self.dir.glob("PR-*.json")), key=lambda p: p.created_at, reverse=True)
 
     def approve(self, id_: str, by: str, comment: str = "") -> ChangeProposal:
         p = self.load(id_)
